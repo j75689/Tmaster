@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: Tmaster-dbhelper
+    app.kubernetes.io/name: Tmaster-dbhelper
+    app: Tmaster-dbhelper
+  name: Tmaster-dbhelper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: Tmaster-dbhelper
+      app.kubernetes.io/instance: Tmaster-dbhelper
+      app.kubernetes.io/name: Tmaster-dbhelper
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: Tmaster-dbhelper
+        app.kubernetes.io/instance: Tmaster-dbhelper
+        app.kubernetes.io/name: Tmaster-dbhelper
+        auth-filter-injection: enabled
+        accesslog-filter-injection: enabled
+    spec:
+      containers:
+        - image: Tmaster
+          imagePullPolicy: Always
+          name: Tmaster-dbhelper
+          args:
+            - "dbhelper"
+            - "--config"
+            - "config/dbhelper.conf.yaml"
+          resources: {}
+          securityContext:
+            capabilities: {}
+          volumeMounts:
+            - mountPath: /Tmaster/config
+              name: config
+            - mountPath: /Tmaster/pubsub_credentials.json
+              name: pubsub-credentials
+              subPath: pubsub_credentials.json
+      initContainers:
+        - image: Tmaster
+          imagePullPolicy: Always
+          name: Tmaster-migration
+          args:
+            - "migrate"
+            - "--config"
+            - "config/dbhelper.conf.yaml"
+          volumeMounts:
+            - mountPath: /Tmaster/config
+              name: config
+        - image: Tmaster
+          imagePullPolicy: Always
+          name: Tmaster-initmq
+          args:
+            - "initmq"
+            - "dbhelper"
+            - "--config"
+            - "config/dbhelper.conf.yaml"
+          volumeMounts:
+            - mountPath: /Tmaster/config
+              name: config
+            - mountPath: /Tmaster/pubsub_credentials.json
+              name: pubsub-credentials
+              subPath: pubsub_credentials.json
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      securityContext: {}
+      imagePullSecrets:
+        - name: github
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: config
+          secret:
+            defaultMode: 420
+            secretName: Tmaster-dbhelper-config
+        - name: pubsub-credentials
+          secret:
+            defaultMode: 420
+            secretName: Tmaster-pubsub-credentials

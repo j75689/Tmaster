@@ -1,0 +1,37 @@
+
+type JobStatus{
+  job_id: ID!
+  status: Status! @extraTag(xorm: "index")
+  timestamp: Timestamp!
+  task_history: [TaskHistory] @extraTag(xorm: "-")
+}
+
+scalar Map
+scalar Timestamp
+
+enum Status {
+    PENDING
+    WORKING
+    SUCCESS
+    TIMEOUT
+    FAILED
+}
+
+enum Cause {
+    EXECUTE
+    RETRY
+    CATCH
+}
+
+type TaskHistory {
+    from: ID!
+    cause: Cause!
+    task_id: ID!
+    status: Status!
+    retry_count: Int
+    executed_at: Timestamp
+    cancelled_at: Timestamp
+    completed_at: Timestamp
+    input: Map @extraTag(xorm: "LONGTEXT")
+    output: Map @extraTag(xorm: "LONGTEXT")
+}

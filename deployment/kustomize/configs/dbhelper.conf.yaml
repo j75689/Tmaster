@@ -1,0 +1,49 @@
+log_level: DEBUG
+
+db_helper:
+    job:
+        project_id: tmaster
+        topic: tmaster_job_db_helper
+        subscribe_id: tmaster_job_db_helper
+    task:
+        project_id: tmaster
+        topic: tmaster_task_db_helper
+        subscribe_id: tmaster_task_db_helper
+
+db:
+    show_sql: true
+    host: external-mysql
+    port: 3306
+    max_open_conn: 1000
+    max_idle_conn: 500
+
+mq:
+    driver: redis_stream
+    distribution: 3
+    google_pub_sub:
+        credential_path: ./pubsub_credentials.json
+        max_outstanding_messages: 500
+    nats:
+        durable_name: "durable-job"
+        cluster_name: stan-dev-cluster
+        worker_size: 500
+        max_pub_acks_inflight: 500
+        max_inflight: 1000
+        servers:
+            - nats://nats-dev-cluster.nats-dev-cluster.svc:4222
+    redis_stream:
+        redis_option:
+            host: external-redis
+            port: 6379
+            db: 3
+            pool_size: 500
+        num_consumers: 500
+        prefetch_limit: 500
+        poll_duration: 10ms
+
+
+redis:
+    host: external-redis
+    port: 6379
+    pool_size: 1000
+

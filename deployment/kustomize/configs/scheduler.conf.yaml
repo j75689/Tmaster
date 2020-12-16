@@ -1,0 +1,48 @@
+log_level: DEBUG
+
+http:
+    port: 8080
+    graphql:
+        endpoint: /api/v1/graphql
+        playground:
+            path: /graphql/playground
+            title: "GraphQL playground"
+            disable: false
+
+task_scheduler:
+    task_input:
+        project_id: tmaster
+        topic: tmaster_task_input
+    task_output:
+        project_id: tmaster
+        topic: tmaster_task_output
+        subscribe_id: tmaster_task_output
+    job_db_helper: 
+        project_id: tmaster
+        topic: tmaster_job_db_helper
+    task_db_helper: 
+        project_id: tmaster
+        topic: tmaster_task_db_helper
+    
+db:
+    show_sql: true
+    host: localhost
+    port: 3306
+
+mq:
+    driver: google_pub_sub
+    google_pub_sub:
+        credential_path: ./config/pubsub_credentials.json
+        max_outstanding_messages: 10
+
+redis:
+    host: localhost
+    port: 6379
+
+open_tracing:
+    enable: false
+    driver: jaeger
+    service_name: Tmaster
+    remote_reporter: "http://localhost:14268/api/traces"
+    custom_tag: 
+        service: Tmaster

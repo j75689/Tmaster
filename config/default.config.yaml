@@ -1,0 +1,97 @@
+log_level: DEBUG
+log_format: console
+
+http:
+    port: 8080
+    graphql:
+        endpoint: /api/v1/graphql
+        playground:
+            path: /graphql/playground
+            title: "GraphQL playground"
+            disable: false
+
+job_endpoint:
+    init_job:
+        project_id: tmaster
+        topic: tmaster_init_job
+
+job_initializer:
+    init_job:
+        project_id: tmaster
+        topic: tmaster_init_job
+        subscribe_id: tmaster_init_job
+    task_input:
+        project_id: tmaster
+        topic: tmaster_task_input
+
+task_scheduler:
+    task_input:
+        project_id: tmaster
+        topic: tmaster_task_input
+    task_output:
+        project_id: tmaster
+        topic: tmaster_task_output
+        subscribe_id: tmaster_task_output
+    job_db_helper: 
+        project_id: tmaster
+        topic: tmaster_job_db_helper
+    task_db_helper: 
+        project_id: tmaster
+        topic: tmaster_task_db_helper
+
+db_helper:
+    job:
+        project_id: tmaster
+        topic: tmaster_job_db_helper
+        subscribe_id: tmaster_job_db_helper
+    task:
+        project_id: tmaster
+        topic: tmaster_task_db_helper
+        subscribe_id: tmaster_task_db_helper
+    
+
+task_worker:
+    init_job:
+        project_id: tmaster
+        topic: tmaster_init_job
+    task_input:
+        project_id: tmaster
+        topic: tmaster_task_input
+        subscribe_id: tmaster_task_input
+    task_output:
+        project_id: tmaster
+        topic: tmaster_task_output
+    
+db:
+    show_sql: true
+    host: localhost
+    port: 3306
+
+mq:
+    driver: redis_stream
+    google_pub_sub:
+        credential_path: ./config/pubsub_credentials.json
+        max_outstanding_messages: 10
+    nats:
+        durable_name: "durable-job"
+        servers:
+            - localhost:14222
+            - localhost:14223
+    redis_stream:
+        redis_option:
+            host: localhost
+            port: 6379
+            db: 1
+        num_consumers: 10
+
+redis:
+    host: localhost
+    port: 6379
+
+open_tracing:
+    enable: false
+    driver: jaeger
+    service_name: Tmaster
+    remote_reporter: "http://localhost:14268/api/traces"
+    custom_tag: 
+        service: Tmaster

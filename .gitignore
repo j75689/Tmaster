@@ -1,0 +1,7 @@
+.vscode
+__debug_bin
+wire_gen.go
+go.sum
+/config/*.json
+pubsub_credentials.json
+/vendor

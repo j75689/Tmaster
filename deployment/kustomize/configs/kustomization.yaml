@@ -1,0 +1,22 @@
+secretGenerator:
+- name: Tmaster-graphql-config
+  files:
+  - graphql.conf.yaml
+- name: Tmaster-initializer-config
+  files:
+  - initializer.conf.yaml
+- name: Tmaster-scheduler-config
+  files:
+  - scheduler.conf.yaml
+- name: Tmaster-dbhelper-config
+  files:
+  - dbhelper.conf.yaml
+- name: Tmaster-worker-config
+  files:
+  - worker.conf.yaml
+# - name: Tmaster-pubsub-credentials
+#   files:
+#   - pubsub_credentials.json
+
+generatorOptions:
+  disableNameSuffixHash: true

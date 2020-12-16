@@ -1,0 +1,163 @@
+input Job {
+    comment: String!
+    "json string"
+    parameters: String
+    start_at: String!
+    "How much nums of task will be execute consistently"
+    consistent_task_nums: Int 
+    tasks: [Task]!
+}
+
+"Ref: https://docs.aws.amazon.com/step-functions/latest/dg/concepts-states.html"
+enum TaskType {
+    PASS
+    TASK
+    WAIT
+    PARALLEL
+    CHOICE
+}
+
+"Ref: https://docs.aws.amazon.com/step-functions/latest/dg/concepts-error-handling.html"
+enum ErrorCode {
+    ALL
+    TIMEOUT
+    RUNTIME
+    TASKFAILED
+    PERMISSIONS
+}
+
+input Retry {
+    error_on: [ErrorCode]
+    "An integer that represents the number of seconds before the first retry attempt"
+    interval: Int
+    "A positive integer that represents the maximum number of retry attempts, Can be replace with variables"
+    max_attempts: String
+    exclude_error_message: [String]
+}
+
+input Catch {
+    error_on: [ErrorCode]
+    next: String!
+    exclude_error_message: [String]
+}
+
+"Ref: https://docs.aws.amazon.com/step-functions/latest/dg/concepts-states.html"
+input Task {
+    name: String!
+    type: TaskType!
+    end: Boolean
+    next: String
+    retry: Retry
+    catch: Catch
+    "Ref: https://docs.aws.amazon.com/step-functions/latest/dg/input-output-resultpath.html"
+    input_path: String
+    "Ref: https://docs.aws.amazon.com/step-functions/latest/dg/input-output-resultpath.html"
+    result_path: String
+    "Ref: https://docs.aws.amazon.com/step-functions/latest/dg/input-output-outputpath.html"
+    output_path: String
+    error_path: String
+    header_path: String
+    "Task"
+    endpoint: Endpoint
+    timeout: Int
+    "Wait"
+    seconds: Int
+    until: Timestamp
+    "Parallel"
+    branches: [Job]
+    "Choice"
+    choices: [Choice]
+    default: String
+}
+
+enum ChoiceHelper {
+    StringEquals
+    IntEquals
+    IntGreaterThanEquals
+    IntGreaterThan
+    IntLessThanEquals
+    IntLessThan
+    FloatEquals
+    FloatGreaterThanEquals
+    FloatGreaterThan
+    FloatLessThanEquals
+    FloatLessThan
+}
+
+input ChoiceOperation {
+    variable: String!
+    helper: ChoiceHelper!
+    string: String
+    int: Int
+    float: Float
+}
+
+input Choice {
+    not: ChoiceOperation
+    or: [ChoiceOperation]
+    and: [ChoiceOperation]
+    variable: String
+    helper: ChoiceHelper
+    string: String
+    int: Int
+    float: Float
+    next: String
+}
+
+enum Protocol {
+    HTTP
+    GRPC
+    PUBSUB
+    NATS
+    REDIS_STREAM
+}
+
+enum HttpMethod {
+    GET
+    POST
+    PUT
+    PATCH
+    DELETE
+}
+
+input KVItemInput {
+    key: String!
+    value: String!
+}
+
+input Endpoint {
+    protocol: Protocol!
+    connect_timeout: String
+    detected_error_from_header: [KVItemInput]
+    "HTTP"
+    method: HttpMethod
+    url: String
+    headers: [KVItemInput]
+    body: String
+    insecure: Boolean
+    proxy: String
+
+    "GRPC"
+    symbol: String
+    "json or text"
+    format: String 
+    add_headers: [String!]
+    rpc_headers: [String!]
+    refl_headers: [String!]
+
+    "PUBSUB"
+    credential: String
+    project_id: String
+    topic_id: String
+
+    "NATS"
+    subject: String
+    user: String
+    password: String
+    token: String
+    cluster_name: String
+
+    "REDIS_STREAM"
+    queue: String
+    db: Int
+}

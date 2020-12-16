@@ -1,0 +1,41 @@
+module github.com/j75689/Tmaster
+
+go 1.15
+
+require (
+	cloud.google.com/go/pubsub v1.6.2
+	github.com/99designs/gqlgen v0.11.3
+	github.com/adjust/rmq/v3 v3.0.0
+	github.com/bsm/redislock v0.7.0
+	github.com/fullstorydev/grpcurl v1.7.0
+	github.com/gin-contrib/logger v0.0.2
+	github.com/gin-gonic/contrib v0.0.0-20191209060500-d6e26eeaa607
+	github.com/gin-gonic/gin v1.5.0
+	github.com/go-redis/redis/v7 v7.4.0
+	github.com/go-redis/redis/v8 v8.3.3
+	github.com/go-sql-driver/mysql v1.5.0
+	github.com/google/wire v0.4.0
+	github.com/jhump/protoreflect v1.7.0
+	github.com/lib/pq v1.8.0
+	github.com/mattn/go-sqlite3 v1.14.3
+	github.com/nats-io/nats.go v1.10.1-0.20200909191325-42c4036ae739
+	github.com/nats-io/stan.go v0.7.0
+	github.com/opentracing/opentracing-go v1.2.0
+	github.com/openzipkin-contrib/zipkin-go-opentracing v0.4.5
+	github.com/openzipkin/zipkin-go v0.2.3
+	github.com/rs/xid v1.2.1
+	github.com/rs/zerolog v1.20.0
+	github.com/spf13/cobra v1.0.0
+	github.com/spf13/viper v1.6.3
+	github.com/thoas/go-funk v0.7.0
+	github.com/uber/jaeger-client-go v2.25.0+incompatible
+	github.com/uber/jaeger-lib v2.2.0+incompatible
+	github.com/vektah/gqlparser/v2 v2.0.1
+	go.uber.org/zap v1.10.0
+	golang.org/x/sync v0.0.0-20200625203802-6e8e738ad208
+	google.golang.org/api v0.32.0
+	google.golang.org/grpc v1.32.0
+	xorm.io/builder v0.3.7
+	xorm.io/core v0.7.3
+	xorm.io/xorm v1.0.5
+)
