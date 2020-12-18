@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/rs/zerolog"
 	"github.com/j75689/Tmaster/pkg/errors"
 	"github.com/j75689/Tmaster/pkg/executor"
 	"github.com/j75689/Tmaster/pkg/executor/choice/helper"
 	"github.com/j75689/Tmaster/pkg/graph/model"
 	"github.com/j75689/Tmaster/pkg/message"
 	"github.com/j75689/Tmaster/pkg/utils/parser"
+	"github.com/rs/zerolog"
 )
 
 var _ executor.Executor = (*ChoiceExecutor)(nil)
@@ -78,6 +78,7 @@ func (executor *ChoiceExecutor) Execute(context message.Context, input interface
 	if err != nil {
 		return nil, taskConfig, errors.NewRuntimeError(fmt.Errorf("json unmarshal task config error [%v]", err))
 	}
+	executor.logger.Debug().Bytes("task_config", taskConfigStr).Msg("replaced task config")
 
 	// default choice
 	if taskConfig.Default != nil {
