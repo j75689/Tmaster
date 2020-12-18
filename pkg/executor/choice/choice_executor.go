@@ -62,6 +62,7 @@ func (executor *ChoiceExecutor) Execute(context message.Context, input interface
 		}
 	}
 
+	executor.logger.Debug().Interface("input_value", inputParam).Msg("input map values")
 	taskConfigStr, err := json.Marshal(taskConfig)
 	if err != nil {
 		return nil, taskConfig, errors.NewRuntimeError(fmt.Errorf("json marshal task config error [%v]", err))
@@ -74,19 +75,20 @@ func (executor *ChoiceExecutor) Execute(context message.Context, input interface
 	if err != nil {
 		return nil, taskConfig, errors.NewRuntimeError(fmt.Errorf("replace system variables of task config error [%v]", err))
 	}
-	err = json.Unmarshal(taskConfigStr, taskConfig)
+	var replacedTaskConfig model.Task
+	err = json.Unmarshal(taskConfigStr, &replacedTaskConfig)
 	if err != nil {
 		return nil, taskConfig, errors.NewRuntimeError(fmt.Errorf("json unmarshal task config error [%v]", err))
 	}
 	executor.logger.Debug().Bytes("task_config", taskConfigStr).Msg("replaced task config")
 
 	// default choice
-	if taskConfig.Default != nil {
-		taskConfig.Next = taskConfig.Default
+	if replacedTaskConfig.Default != nil {
+		taskConfig.Next = replacedTaskConfig.Default
 	}
 
 	// choice next
-	for _, choice := range taskConfig.Choices {
+	for _, choice := range replacedTaskConfig.Choices {
 		var (
 			logic = false
 			err   error
