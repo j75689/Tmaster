@@ -12,9 +12,9 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/rs/zerolog"
 	"github.com/j75689/Tmaster/pkg/endpoint"
 	"github.com/j75689/Tmaster/pkg/graph/model"
+	"github.com/rs/zerolog"
 )
 
 var _ endpoint.Handler = (*HttpHandler)(nil)
@@ -89,7 +89,7 @@ func (handler *HttpHandler) Do(ctx context.Context, endpointConfig *model.Endpoi
 
 	var (
 		body   []byte
-		header map[string]string
+		header = make(map[string]string)
 		// Check that the server actually sent compressed data
 		reader io.ReadCloser
 	)
