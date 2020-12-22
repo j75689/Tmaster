@@ -6,14 +6,19 @@ require (
 	cloud.google.com/go/pubsub v1.6.2
 	github.com/99designs/gqlgen v0.11.3
 	github.com/adjust/rmq/v3 v3.0.0
+	github.com/alicebob/miniredis v2.5.0+incompatible
+	github.com/alicebob/miniredis/v2 v2.14.1 // indirect
 	github.com/bsm/redislock v0.7.0
+	github.com/elliotchance/redismock v1.5.3 // indirect
 	github.com/fullstorydev/grpcurl v1.7.0
 	github.com/gin-contrib/logger v0.0.2
 	github.com/gin-gonic/contrib v0.0.0-20191209060500-d6e26eeaa607
 	github.com/gin-gonic/gin v1.5.0
+	github.com/go-redis/redis v6.15.9+incompatible // indirect
 	github.com/go-redis/redis/v7 v7.4.0
 	github.com/go-redis/redis/v8 v8.3.3
 	github.com/go-sql-driver/mysql v1.5.0
+	github.com/gomodule/redigo v1.8.3 // indirect
 	github.com/google/wire v0.4.0
 	github.com/jhump/protoreflect v1.7.0
 	github.com/lib/pq v1.8.0

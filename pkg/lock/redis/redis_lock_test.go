@@ -4,29 +4,47 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"sync"
 	"testing"
+	"time"
 
+	"github.com/alicebob/miniredis"
+	"github.com/bsm/redislock"
+	"github.com/go-redis/redis/v8"
 	"github.com/j75689/Tmaster/pkg/config"
 	"github.com/j75689/Tmaster/pkg/lock"
 )
 
-func init() {
-	c, err := config.NewConfig("./config/default.config.yaml")
+func newMockRedisLock() (lock.Locker, error) {
+	mr, err := miniredis.Run()
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		return nil, err
 	}
-	cfg = c
-	l, err := NewRedisLocker(
-		cfg.Redis.Host,
-		cfg.Redis.Port,
-		cfg.Redis.Password,
-		cfg.Redis.DB,
-		cfg.Redis.PoolSize,
-		cfg.Redis.MinIdleConns,
-		cfg.Redis.LockTimeout,
-		cfg.Redis.LockFlushTime,
-	)
+
+	client := redis.NewClient(&redis.Options{
+		Addr: mr.Addr(),
+	})
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	_, err = client.Ping(ctx).Result()
+	if err != nil {
+		return nil, err
+	}
+
+	locker := redislock.New(client)
+	redisLocker := &RedisLocker{
+		autoDelayLocks: sync.Map{},
+		locks:          sync.Map{},
+		client:         locker,
+		timeout:        10 * time.Second,
+	}
+	redisLocker.flushAutoDelayLock(time.Second)
+	return redisLocker, nil
+}
+
+func init() {
+	l, err := newMockRedisLock()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
