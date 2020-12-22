@@ -26,5 +26,9 @@ jobs:
         go-version: ${{ matrix.go-version }}
     - name: Checkout code
       uses: actions/checkout@v2
+    - name: Wire
+      run: |
+        go get github.com/google/wire/cmd/wire
+        wire ./...
     - name: Test
       run: go test ./...
