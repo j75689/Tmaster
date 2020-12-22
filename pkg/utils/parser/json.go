@@ -47,11 +47,15 @@ func ReplaceVariables(config []byte, variables interface{}) ([]byte, error) {
 		}
 		if v != nil {
 			nValue := ""
-			vv, err := json.Marshal(v)
-			if err != nil {
-				nValue = strconv.Quote(fmt.Sprint(v))
+			if s, ok := v.(string); ok {
+				nValue = strconv.Quote(strconv.Quote(string(s)))
 			} else {
-				nValue = strconv.Quote(string(vv))
+				vv, err := json.Marshal(v)
+				if err != nil {
+					nValue = strconv.Quote(fmt.Sprint(v))
+				} else {
+					nValue = strconv.Quote(string(vv))
+				}
 			}
 			value = nValue[1 : len(nValue)-1]
 		} else {

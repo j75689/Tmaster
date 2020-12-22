@@ -325,7 +325,7 @@ func TestReplaceVariables(t *testing.T) {
 					},
 				},
 			},
-			wantReply: []byte(`abcd: {\"abc\":\"<<&>>\"}`),
+			wantReply: []byte(`abcd: {\"abc\":\"\\u003c\\u003c\\u0026\\u003e\\u003e\"}`),
 			wantErr:   false,
 		},
 		{
