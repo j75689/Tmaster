@@ -17,6 +17,7 @@ require (
 	github.com/go-redis/redis/v7 v7.4.0
 	github.com/go-redis/redis/v8 v8.3.3
 	github.com/go-sql-driver/mysql v1.5.0
+	github.com/golang/mock v1.4.4
 	github.com/gomodule/redigo v1.8.3 // indirect
 	github.com/google/wire v0.4.0
 	github.com/jhump/protoreflect v1.7.0

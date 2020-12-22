@@ -12,12 +12,16 @@ tools:
 	@git clone https://github.com/j75689/gqlgen.git ${GOPATH}/src/github.com/j75689/gqlgen
 	@cd ${GOPATH}/src/github.com/j75689/gqlgen && go install
 	@go get github.com/google/wire/cmd/wire
+	@GO111MODULE=on go get github.com/golang/mock/mockgen@v1.4.4
 
 gen:
 	# generate model & reslover
 	@gqlgen
 	# generate dependency injection
 	@wire ./...
+
+mock-gen:
+	@mockgen -package=mock -destination=./mock/mock_gen.go github.com/j75689/Tmaster/pkg/mq MQ
 
 build:
 	@go build -ldflags="-X ${REPO}/cmd.version=${VERSION} -X ${REPO}/cmd.commitID=${GIT_COMMIT} -X ${REPO}/cmd.commitDate=${GIT_COMMIT_DATE}"
