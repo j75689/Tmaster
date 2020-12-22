@@ -14,6 +14,7 @@ enum Status {
     WORKING
     SUCCESS
     TIMEOUT
+    OVERLOAD
     FAILED
 }
 

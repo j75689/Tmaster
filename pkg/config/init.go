@@ -105,6 +105,7 @@ func NewConfig(configPath string) (config Config, err error) {
 	v.SetDefault("job_initializer.init_job.subscribe_id", "tmaster_init_job")
 	v.SetDefault("job_initializer.task_input.project_id", "tmaster")
 	v.SetDefault("job_initializer.task_input.topic", "tmaster_task_input")
+	v.SetDefault("job_initializer.max_task_execution", 500)
 
 	// scheduler worker
 	v.SetDefault("task_scheduler.task_output.project_id", "tmaster")

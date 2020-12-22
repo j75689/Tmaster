@@ -76,6 +76,10 @@ type Job struct {
 	// How much nums of task will be execute consistently
 	ConsistentTaskNums *int    `json:"consistent_task_nums"`
 	Tasks              []*Task `json:"tasks"`
+	// Maximum seconds of job execution
+	Timeout *int `json:"timeout"`
+	// Maximum number of task execution
+	MaxTaskExecution *int `json:"max_task_execution"`
 }
 
 type JobStatus struct {
@@ -388,11 +392,12 @@ func (e Protocol) MarshalGQL(w io.Writer) {
 type Status string
 
 const (
-	StatusPending Status = "PENDING"
-	StatusWorking Status = "WORKING"
-	StatusSuccess Status = "SUCCESS"
-	StatusTimeout Status = "TIMEOUT"
-	StatusFailed  Status = "FAILED"
+	StatusPending  Status = "PENDING"
+	StatusWorking  Status = "WORKING"
+	StatusSuccess  Status = "SUCCESS"
+	StatusTimeout  Status = "TIMEOUT"
+	StatusOverload Status = "OVERLOAD"
+	StatusFailed   Status = "FAILED"
 )
 
 var AllStatus = []Status{
@@ -400,12 +405,13 @@ var AllStatus = []Status{
 	StatusWorking,
 	StatusSuccess,
 	StatusTimeout,
+	StatusOverload,
 	StatusFailed,
 }
 
 func (e Status) IsValid() bool {
 	switch e {
-	case StatusPending, StatusWorking, StatusSuccess, StatusTimeout, StatusFailed:
+	case StatusPending, StatusWorking, StatusSuccess, StatusTimeout, StatusOverload, StatusFailed:
 		return true
 	}
 	return false

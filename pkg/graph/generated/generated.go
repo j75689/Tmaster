@@ -315,6 +315,10 @@ extend type Mutation {
     "How much nums of task will be execute consistently"
     consistent_task_nums: Int 
     tasks: [Task]!
+    "Maximum seconds of job execution"
+    timeout: Int
+    "Maximum number of task execution"
+    max_task_execution: Int
 }
 
 "Ref: https://docs.aws.amazon.com/step-functions/latest/dg/concepts-states.html"
@@ -487,6 +491,7 @@ enum Status {
     WORKING
     SUCCESS
     TIMEOUT
+    OVERLOAD
     FAILED
 }
 
@@ -2631,6 +2636,18 @@ func (ec *executionContext) unmarshalInputJob(ctx context.Context, obj interface
 		case "tasks":
 			var err error
 			it.Tasks, err = ec.unmarshalNTask2ᚕᚖgithubᚗcomᚋj75689ᚋTmasterᚋpkgᚋgraphᚋmodelᚐTask(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "timeout":
+			var err error
+			it.Timeout, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "max_task_execution":
+			var err error
+			it.MaxTaskExecution, err = ec.unmarshalOInt2ᚖint(ctx, v)
 			if err != nil {
 				return it, err
 			}

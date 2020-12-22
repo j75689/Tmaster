@@ -7,8 +7,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/rs/xid"
-	"github.com/rs/zerolog"
 	"github.com/j75689/Tmaster/pkg/config"
 	dbmodel "github.com/j75689/Tmaster/pkg/database/model"
 	"github.com/j75689/Tmaster/pkg/graph/model"
@@ -19,6 +17,8 @@ import (
 	"github.com/j75689/Tmaster/pkg/utils/collection"
 	"github.com/j75689/Tmaster/pkg/utils/gzip"
 	"github.com/j75689/Tmaster/pkg/utils/parser"
+	"github.com/rs/xid"
+	"github.com/rs/zerolog"
 )
 
 const (
@@ -96,6 +96,9 @@ func (worker *ScheduleWorker) Process(taskOutput *message.TaskOutput) (*message.
 		consistent        = false
 		consistentNums    = taskOutput.Context.Execution.ConsistentNums
 		maxConsistentNums = taskOutput.Context.Execution.MaxConsistentNums
+		timeout           = taskOutput.Context.Execution.Timeout
+		maxTaskExecution  = taskOutput.Context.Execution.MaxTaskExecution
+		taskExecution     = taskOutput.Context.Execution.TaskExecution + 1
 	)
 	defer time.Sleep(interval)
 
@@ -156,7 +159,9 @@ func (worker *ScheduleWorker) Process(taskOutput *message.TaskOutput) (*message.
 		}
 	}
 
+	hasNext := false
 	if nextTask != nil {
+		hasNext = true
 		now := time.Now()
 		id := xid.New().String()
 
@@ -165,6 +170,17 @@ func (worker *ScheduleWorker) Process(taskOutput *message.TaskOutput) (*message.
 			consistentNums++
 		} else {
 			consistentNums = 0
+		}
+
+		if timeout != nil && timeout.Before(time.Now()) {
+			hasNext = false
+			updateJob.Status = model.StatusTimeout
+
+		}
+
+		if taskExecution > maxTaskExecution {
+			hasNext = false
+			updateJob.Status = model.StatusOverload
 		}
 
 		taskInput = &message.TaskInput{
@@ -177,6 +193,9 @@ func (worker *ScheduleWorker) Process(taskOutput *message.TaskOutput) (*message.
 					CauseErrorCode:    taskOutput.ErrorCode,
 					ConsistentNums:    consistentNums,
 					MaxConsistentNums: maxConsistentNums,
+					Timeout:           timeout,
+					MaxTaskExecution:  maxTaskExecution,
+					TaskExecution:     taskExecution,
 				},
 				State: message.State{
 					EnteredTime: now,
@@ -208,6 +227,10 @@ func (worker *ScheduleWorker) Process(taskOutput *message.TaskOutput) (*message.
 			worker.logger.Err(err).Str("task_id", taskOutput.TaskXID).Msg("save task error")
 		}
 	}()
+
+	if !hasNext {
+		return nil, nil
+	}
 
 	return taskInput, nil
 }

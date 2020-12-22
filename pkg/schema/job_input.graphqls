@@ -6,6 +6,10 @@ input Job {
     "How much nums of task will be execute consistently"
     consistent_task_nums: Int 
     tasks: [Task]!
+    "Maximum seconds of job execution"
+    timeout: Int
+    "Maximum number of task execution"
+    max_task_execution: Int
 }
 
 "Ref: https://docs.aws.amazon.com/step-functions/latest/dg/concepts-states.html"

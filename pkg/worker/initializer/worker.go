@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/rs/xid"
-	"github.com/rs/zerolog"
 	"github.com/j75689/Tmaster/pkg/config"
 	dbmodel "github.com/j75689/Tmaster/pkg/database/model"
 	"github.com/j75689/Tmaster/pkg/graph/model"
@@ -14,6 +12,8 @@ import (
 	"github.com/j75689/Tmaster/pkg/message"
 	"github.com/j75689/Tmaster/pkg/opentracer"
 	"github.com/j75689/Tmaster/pkg/utils/parser"
+	"github.com/rs/xid"
+	"github.com/rs/zerolog"
 	"xorm.io/xorm"
 )
 
@@ -111,6 +111,37 @@ func (worker *InitializeWorker) Process(initJob *message.InitJob) (*message.Task
 		consistent = maxConsistentNums > 0
 	}
 
+	var timeout *time.Time
+	if initJob.Job.Timeout != nil {
+		t := time.Now().Add(time.Second * time.Duration(*initJob.Job.Timeout))
+		timeout = &t
+	}
+
+	if timeout != nil && timeout.Before(time.Now()) {
+		job.Status = model.StatusTimeout
+		_, err := worker.db.Update(job)
+		if err != nil {
+			return nil, err
+		}
+		return nil, nil
+	}
+
+	maxTaskExecution := worker.config.JobInitializer.MaxTaskExecution
+	if initJob.Job.MaxTaskExecution != nil {
+		maxTaskExecution = *initJob.Job.MaxTaskExecution
+	}
+
+	taskExecution := 1
+
+	if taskExecution > maxTaskExecution {
+		job.Status = model.StatusOverload
+		_, err := worker.db.Update(job)
+		if err != nil {
+			return nil, err
+		}
+		return nil, nil
+	}
+
 	taskMap := parser.TaskArrayToMap(initJob.Tasks)
 	task := taskMap[initJob.StartAt]
 	if task != nil {
@@ -121,6 +152,9 @@ func (worker *InitializeWorker) Process(initJob *message.InitJob) (*message.Task
 					ID:                id,
 					Cause:             model.CauseExecute,
 					MaxConsistentNums: maxConsistentNums,
+					Timeout:           timeout,
+					MaxTaskExecution:  maxTaskExecution,
+					TaskExecution:     taskExecution,
 				},
 				State: message.State{
 					EnteredTime: now,
@@ -139,7 +173,11 @@ func (worker *InitializeWorker) Process(initJob *message.InitJob) (*message.Task
 		}
 	} else {
 		job.JobStatus.Status = model.StatusSuccess
-		worker.db.Update(job)
+		_, err := worker.db.Update(job)
+		if err != nil {
+			return nil, err
+		}
+		return nil, nil
 	}
 
 	return taskInput, nil

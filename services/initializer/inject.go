@@ -61,6 +61,10 @@ func (application Application) Start() error {
 			}
 			application.logger.Debug().Dur("duration", time.Since(t)).Msg("process input message")
 
+			if taskInput == nil {
+				return nil
+			}
+
 			var (
 				taskOutput *message.TaskOutput
 				consistent = taskInput.Consistent

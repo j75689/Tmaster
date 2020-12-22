@@ -40,8 +40,9 @@ type JobEndpointConfig struct {
 }
 
 type JobInitializerConfig struct {
-	InitJob   PullQueue `mapstructure:"init_job"`
-	TaskInput PushQueue `mapstructure:"task_input"`
+	MaxTaskExecution int       `mapstructure:"max_task_execution"`
+	InitJob          PullQueue `mapstructure:"init_job"`
+	TaskInput        PushQueue `mapstructure:"task_input"`
 }
 
 type TaskSchedulerConfig struct {

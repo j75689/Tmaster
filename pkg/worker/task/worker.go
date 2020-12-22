@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/rs/zerolog"
 	"github.com/j75689/Tmaster/pkg/config"
 	"github.com/j75689/Tmaster/pkg/errors"
 	"github.com/j75689/Tmaster/pkg/executor"
@@ -13,6 +12,7 @@ import (
 	"github.com/j75689/Tmaster/pkg/lock"
 	"github.com/j75689/Tmaster/pkg/message"
 	"github.com/j75689/Tmaster/pkg/opentracer"
+	"github.com/rs/zerolog"
 )
 
 const (
@@ -99,6 +99,9 @@ func (worker *TaskWorker) Process(taskInput *message.TaskInput) (*message.TaskOu
 				Cause:             taskInput.Context.Execution.Cause,
 				MaxConsistentNums: taskInput.Context.Execution.MaxConsistentNums,
 				ConsistentNums:    taskInput.Context.Execution.ConsistentNums,
+				Timeout:           taskInput.Context.Execution.Timeout,
+				MaxTaskExecution:  taskInput.Context.Execution.MaxTaskExecution,
+				TaskExecution:     taskInput.Context.Execution.TaskExecution,
 			},
 			State: message.State{
 				EnteredTime: taskInput.Context.State.EnteredTime,
