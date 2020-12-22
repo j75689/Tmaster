@@ -1,0 +1,30 @@
+name: Docker
+
+on:
+  push:
+    # Publish `v1.2.3` tags as releases.
+    branches:
+      - main
+      
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # Push image to GitHub Packages.
+  # See also https://docs.docker.com/docker-hub/builds/
+  test:
+    strategy:
+      matrix:
+        go-version: [1.15.x]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Install Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: ${{ matrix.go-version }}
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Test
+      run: go test ./...
