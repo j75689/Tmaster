@@ -144,6 +144,7 @@ type RedisConfig struct {
 	PoolSize      int           `mapstructure:"pool_size"`
 	LockTimeout   time.Duration `mapstructure:"lock_timeout"`
 	LockFlushTime time.Duration `mapstructure:"lock_flush_time"`
+	DialTimeout   time.Duration `mapstructure:"dial_timeout"`
 }
 
 type OpenTracingConfig struct {

@@ -15,6 +15,7 @@ func InitializeLocker(config config.Config) (lock.Locker, error) {
 	return redis.NewRedisLocker(
 		config.Redis.Host, config.Redis.Port, config.Redis.Password,
 		config.Redis.DB, config.Redis.PoolSize,
-		config.Redis.MinIdleConns, config.Redis.LockTimeout, config.Redis.LockFlushTime,
+		config.Redis.MinIdleConns, config.Redis.DialTimeout,
+		config.Redis.LockTimeout, config.Redis.LockFlushTime,
 	)
 }

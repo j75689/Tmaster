@@ -9,11 +9,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/adjust/rmq/v3"
-	"github.com/go-redis/redis/v7"
-	"github.com/rs/zerolog"
+	"github.com/adjust/rmq/v4"
+	redis "github.com/go-redis/redis/v8"
 	"github.com/j75689/Tmaster/pkg/config"
 	"github.com/j75689/Tmaster/pkg/mq"
+	"github.com/rs/zerolog"
 )
 
 var _ mq.MQ = (*RedisStream)(nil)
@@ -31,8 +31,9 @@ func NewRedisStream(config config.MQConfig, logger zerolog.Logger) (mq.MQ, error
 		PoolSize:     config.RedisStream.RedisOption.PoolSize,
 		MinIdleConns: config.RedisStream.RedisOption.MinIdleConns,
 	})
-
-	_, err = client.Ping().Result()
+	ctx, cancel := context.WithTimeout(context.Background(), config.RedisStream.RedisOption.DialTimeout)
+	defer cancel()
+	_, err = client.Ping(ctx).Result()
 	if err != nil {
 		return nil, err
 	}

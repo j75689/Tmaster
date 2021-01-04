@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go/pubsub v1.6.2
 	github.com/99designs/gqlgen v0.11.3
 	github.com/HdrHistogram/hdrhistogram-go v1.0.1 // indirect
-	github.com/adjust/rmq/v3 v3.0.0
+	github.com/adjust/rmq/v4 v4.0.0
 	github.com/alicebob/gopher-json v0.0.0-20200520072559-a9ecdc9d1d3a // indirect
 	github.com/alicebob/miniredis v2.5.0+incompatible
 	github.com/bsm/redislock v0.7.0
@@ -14,8 +14,7 @@ require (
 	github.com/gin-contrib/logger v0.0.2
 	github.com/gin-gonic/contrib v0.0.0-20191209060500-d6e26eeaa607
 	github.com/gin-gonic/gin v1.5.0
-	github.com/go-redis/redis/v7 v7.4.0
-	github.com/go-redis/redis/v8 v8.3.3
+	github.com/go-redis/redis/v8 v8.4.4
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/mock v1.4.4
 	github.com/gomodule/redigo v1.8.3 // indirect

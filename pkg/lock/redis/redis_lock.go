@@ -15,7 +15,7 @@ var _ lock.Locker = (*RedisLocker)(nil)
 
 func NewRedisLocker(
 	host string, port uint, password string, db int,
-	poolSize, minIdleConns int, timeout, flushTime time.Duration,
+	poolSize, minIdleConns int, dialTimeout, timeout, flushTime time.Duration,
 ) (lock.Locker, error) {
 	client := redis.NewClient(&redis.Options{
 		Addr:         fmt.Sprintf("%s:%d", host, port),
@@ -24,7 +24,7 @@ func NewRedisLocker(
 		PoolSize:     poolSize,
 		MinIdleConns: minIdleConns,
 	})
-	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	ctx, cancel := context.WithTimeout(context.Background(), dialTimeout)
 	defer cancel()
 	_, err := client.Ping(ctx).Result()
 	if err != nil {

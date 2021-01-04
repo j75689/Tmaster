@@ -1,6 +1,7 @@
 package stream
 
 import (
+	"context"
 	"math/rand"
 	"os"
 	"strconv"
@@ -8,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/adjust/rmq/v3"
+	"github.com/adjust/rmq/v4"
 	"github.com/alicebob/miniredis"
-	"github.com/go-redis/redis/v7"
+	"github.com/go-redis/redis/v8"
 	"github.com/j75689/Tmaster/pkg/config"
 	"github.com/j75689/Tmaster/pkg/mq"
 	"github.com/rs/zerolog/log"
@@ -31,7 +32,10 @@ func newMockRedisStream() (mq.MQ, error) {
 		Addr: mr.Addr(),
 	})
 
-	_, err = client.Ping().Result()
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	_, err = client.Ping(ctx).Result()
 	if err != nil {
 		return nil, err
 	}

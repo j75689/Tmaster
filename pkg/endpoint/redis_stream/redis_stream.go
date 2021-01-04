@@ -8,11 +8,11 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/adjust/rmq/v3"
-	"github.com/go-redis/redis/v7"
-	"github.com/rs/zerolog"
+	"github.com/adjust/rmq/v4"
+	"github.com/go-redis/redis/v8"
 	"github.com/j75689/Tmaster/pkg/endpoint"
 	"github.com/j75689/Tmaster/pkg/graph/model"
+	"github.com/rs/zerolog"
 )
 
 type _RedisConnectionKey struct {
@@ -93,7 +93,7 @@ func (handler *RedisStreamHandler) getConn(ctx context.Context, addr, password s
 		DB:       db,
 	})
 
-	_, err = client.WithContext(ctx).Ping().Result()
+	_, err = client.WithContext(ctx).Ping(ctx).Result()
 	if err != nil {
 		return nil, fmt.Errorf("redis stream handler ping redis error: %v", err)
 	}

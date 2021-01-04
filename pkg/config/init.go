@@ -58,6 +58,7 @@ func NewConfig(configPath string) (config Config, err error) {
 	v.SetDefault("mq.redis_stream.redis_option.db", 0)
 	v.SetDefault("mq.redis_stream.redis_option.pool_size", 10)
 	v.SetDefault("mq.redis_stream.redis_option.min_idle_conns", 5)
+	v.SetDefault("mq.redis_stream.redis_option.dial_timeout", "1s")
 	v.SetDefault("mq.redis_stream.num_consumers", 100)
 	v.SetDefault("mq.redis_stream.prefetch_limit", 1000)
 	v.SetDefault("mq.redis_stream.process_timeout", 10*time.Second)
@@ -86,6 +87,7 @@ func NewConfig(configPath string) (config Config, err error) {
 	v.SetDefault("redis.min_idle_conns", 5)
 	v.SetDefault("redis.lock_timeout", "30s")
 	v.SetDefault("redis.lock_flush_time", "1s")
+	v.SetDefault("redis.dial_timeout", "1s")
 
 	// opentracing
 	v.SetDefault("open_tracing.enable", false)
