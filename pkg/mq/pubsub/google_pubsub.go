@@ -11,7 +11,6 @@ import (
 	"github.com/j75689/Tmaster/pkg/config"
 	"github.com/j75689/Tmaster/pkg/mq"
 	"github.com/rs/zerolog"
-	"go.uber.org/zap"
 	"google.golang.org/api/option"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -243,17 +242,6 @@ func NewReceiver(subscription *pubsub.Subscription,
 	}
 
 	return receiver.Start(ctx)
-}
-
-type PublishMessage struct {
-	ProjectID string
-	TopicID   string
-	Message   []byte
-}
-
-type Publisher struct {
-	logger     *zap.Logger
-	msgChannel chan PublishMessage
 }
 
 type Receiver struct {

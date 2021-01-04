@@ -37,7 +37,6 @@ require (
 	github.com/uber/jaeger-lib v2.4.0+incompatible
 	github.com/vektah/gqlparser/v2 v2.0.1
 	github.com/yuin/gopher-lua v0.0.0-20191220021717-ab39c6098bdb // indirect
-	go.uber.org/zap v1.10.0
 	golang.org/x/sync v0.0.0-20200625203802-6e8e738ad208
 	google.golang.org/api v0.32.0
 	google.golang.org/grpc v1.32.0
