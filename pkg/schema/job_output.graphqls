@@ -1,9 +1,9 @@
 
 type JobStatus{
-  job_id: ID!
-  status: Status! @extraTag(xorm: "index")
+  job_id: ID! @extraTag(gorm: "type: varchar(255)")
+  status: Status! @extraTag(gorm: "index; type: varchar(64)")
   timestamp: Timestamp!
-  task_history: [TaskHistory] @extraTag(xorm: "-")
+  task_history: [TaskHistory] @extraTag(gorm: "-")
 }
 
 scalar Map
@@ -25,14 +25,14 @@ enum Cause {
 }
 
 type TaskHistory {
-    from: ID!
-    cause: Cause!
-    task_id: ID!
-    status: Status!
+    from: ID! @extraTag(gorm: "type: varchar(255)")
+    cause: Cause! @extraTag(gorm: "type: varchar(255)")
+    task_id: ID! @extraTag(gorm: "type: varchar(255)")
+    status: Status! @extraTag(gorm: "type: varchar(64)")
     retry_count: Int
     executed_at: Timestamp
     cancelled_at: Timestamp
     completed_at: Timestamp
-    input: Map @extraTag(xorm: "LONGTEXT")
-    output: Map @extraTag(xorm: "LONGTEXT")
+    input: Map @extraTag(gorm: "type: json")
+    output: Map @extraTag(gorm: "type: json")
 }

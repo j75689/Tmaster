@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/spf13/viper"
+	"gorm.io/gorm/logger"
 )
 
 func NewConfig(configPath string) (config Config, err error) {
@@ -71,13 +72,16 @@ func NewConfig(configPath string) (config Config, err error) {
 	v.SetDefault("db.instance_name", "")
 	v.SetDefault("db.user", "root")
 	v.SetDefault("db.password", "")
+	v.SetDefault("db.connect_timeout", "10s")
+	v.SetDefault("db.read_timeout", "30s")
+	v.SetDefault("db.write_timeout", "30s")
 	v.SetDefault("db.dial_timeout", "10s")
+	v.SetDefault("db.max_idletime", "1h")
 	v.SetDefault("db.max_lifetime", "1h")
 	v.SetDefault("db.max_idle_conn", 2)
 	v.SetDefault("db.max_open_conn", 5)
-	v.SetDefault("db.log_level", 1)
+	v.SetDefault("db.log_level", logger.Info)
 	v.SetDefault("db.ssl_mode", false)
-	v.SetDefault("db.show_sql", false)
 
 	// redis
 	v.SetDefault("redis.host", "localhost")

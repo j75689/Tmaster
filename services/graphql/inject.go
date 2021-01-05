@@ -6,14 +6,14 @@ import (
 	"github.com/j75689/Tmaster/pkg/mq"
 	"github.com/j75689/Tmaster/pkg/opentracer"
 	"github.com/rs/zerolog"
-	"xorm.io/xorm"
+	"gorm.io/gorm"
 )
 
 type Application struct {
 	config     config.Config
 	httpServer *graph.HttpServer
 	mq         mq.MQ
-	db         *xorm.Engine
+	db         *gorm.DB
 	tracer     *opentracer.ServiceTracer
 	logger     zerolog.Logger
 }
@@ -34,7 +34,11 @@ func (application Application) Shutdown() error {
 	application.logger.Info().Msg("mq stopped")
 
 	application.logger.Info().Msg("close db ...")
-	err := application.db.Close()
+	db, err := application.db.DB()
+	if err != nil {
+		return err
+	}
+	err = db.Close()
 	if err != nil {
 		return err
 	}
@@ -49,7 +53,7 @@ func (application Application) Shutdown() error {
 	return nil
 }
 
-func newApplication(config config.Config, httpServer *graph.HttpServer, mq mq.MQ, db *xorm.Engine, tracer *opentracer.ServiceTracer, logger zerolog.Logger) Application {
+func newApplication(config config.Config, httpServer *graph.HttpServer, mq mq.MQ, db *gorm.DB, tracer *opentracer.ServiceTracer, logger zerolog.Logger) Application {
 	return Application{
 		config:     config,
 		httpServer: httpServer,

@@ -7,6 +7,8 @@ import (
 	"io"
 	"strconv"
 	"time"
+
+	"github.com/j75689/Tmaster/pkg/graph/scalar"
 )
 
 type Catch struct {
@@ -83,10 +85,10 @@ type Job struct {
 }
 
 type JobStatus struct {
-	JobID       string         `json:"job_id"`
-	Status      Status         `json:"status" xorm:"index"`
+	JobID       string         `json:"job_id" gorm:"type: varchar(255)"`
+	Status      Status         `json:"status" gorm:"index; type: varchar(64)"`
 	Timestamp   time.Time      `json:"timestamp"`
-	TaskHistory []*TaskHistory `json:"task_history" xorm:"-"`
+	TaskHistory []*TaskHistory `json:"task_history" gorm:"-"`
 }
 
 type KVItemInput struct {
@@ -133,16 +135,16 @@ type Task struct {
 }
 
 type TaskHistory struct {
-	From        string                 `json:"from"`
-	Cause       Cause                  `json:"cause"`
-	TaskID      string                 `json:"task_id"`
-	Status      Status                 `json:"status"`
-	RetryCount  *int                   `json:"retry_count"`
-	ExecutedAt  *time.Time             `json:"executed_at"`
-	CancelledAt *time.Time             `json:"cancelled_at"`
-	CompletedAt *time.Time             `json:"completed_at"`
-	Input       map[string]interface{} `json:"input" xorm:"LONGTEXT"`
-	Output      map[string]interface{} `json:"output" xorm:"LONGTEXT"`
+	From        string     `json:"from" gorm:"type: varchar(255)"`
+	Cause       Cause      `json:"cause" gorm:"type: varchar(255)"`
+	TaskID      string     `json:"task_id" gorm:"type: varchar(255)"`
+	Status      Status     `json:"status" gorm:"type: varchar(64)"`
+	RetryCount  *int       `json:"retry_count"`
+	ExecutedAt  *time.Time `json:"executed_at"`
+	CancelledAt *time.Time `json:"cancelled_at"`
+	CompletedAt *time.Time `json:"completed_at"`
+	Input       scalar.Map `json:"input" gorm:"type: json"`
+	Output      scalar.Map `json:"output" gorm:"type: json"`
 }
 
 type Cause string

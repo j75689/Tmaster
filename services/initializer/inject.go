@@ -15,14 +15,14 @@ import (
 	"github.com/j75689/Tmaster/pkg/worker/task"
 	"github.com/rs/zerolog"
 	"golang.org/x/sync/errgroup"
-	"xorm.io/xorm"
+	"gorm.io/gorm"
 )
 
 type Application struct {
 	config    config.Config
 	logger    zerolog.Logger
 	mq        mq.MQ
-	db        *xorm.Engine
+	db        *gorm.DB
 	worker    *initializer.InitializeWorker
 	task      *task.TaskWorker
 	scheduler *scheduler.ScheduleWorker
@@ -131,7 +131,11 @@ func (application Application) Shutdown() error {
 	application.logger.Info().Msg("mq stopped")
 
 	application.logger.Info().Msg("close db ...")
-	err := application.db.Close()
+	db, err := application.db.DB()
+	if err != nil {
+		return err
+	}
+	err = db.Close()
 	if err != nil {
 		return err
 	}
@@ -149,7 +153,7 @@ func (application Application) Shutdown() error {
 func newApplication(
 	config config.Config,
 	mq mq.MQ,
-	db *xorm.Engine,
+	db *gorm.DB,
 	worker *initializer.InitializeWorker,
 	task *task.TaskWorker,
 	scheduler *scheduler.ScheduleWorker,

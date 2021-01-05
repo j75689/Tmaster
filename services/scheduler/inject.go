@@ -13,11 +13,11 @@ import (
 	"github.com/j75689/Tmaster/pkg/worker/scheduler"
 	"github.com/rs/zerolog"
 	"golang.org/x/sync/errgroup"
-	"xorm.io/xorm"
+	"gorm.io/gorm"
 )
 
 type Application struct {
-	db     *xorm.Engine
+	db     *gorm.DB
 	config config.Config
 	logger zerolog.Logger
 	worker *scheduler.ScheduleWorker
@@ -41,7 +41,7 @@ func (application Application) Start() error {
 			application.logger.Debug().Dur("duration", time.Since(t)).Msg("decompress input message")
 
 			t = time.Now()
-			application.logger.Trace().Bytes("data", data).Msg("recived message")
+			application.logger.Trace().Bytes("data", data).Msg("received message")
 			var taskOutput message.TaskOutput
 			err = json.Unmarshal(data, &taskOutput)
 			if err != nil {
@@ -95,7 +95,11 @@ func (application Application) Shutdown() error {
 	application.logger.Info().Msg("mq stopped")
 
 	application.logger.Info().Msg("close db ...")
-	err := application.db.Close()
+	db, err := application.db.DB()
+	if err != nil {
+		return err
+	}
+	err = db.Close()
 	if err != nil {
 		return err
 	}
@@ -113,7 +117,7 @@ func (application Application) Shutdown() error {
 func newApplication(
 	config config.Config,
 	mq mq.MQ,
-	db *xorm.Engine,
+	db *gorm.DB,
 	worker *scheduler.ScheduleWorker,
 	logger zerolog.Logger,
 	tracer *opentracer.ServiceTracer,

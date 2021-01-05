@@ -110,12 +110,12 @@ func (worker *ScheduleWorker) Process(taskOutput *message.TaskOutput) (*message.
 				nextTaskName = *currentTask.Next
 			}
 			nextTask = taskOutput.Context.Tasks[nextTaskName]
-			updateJob.Status = model.StatusWorking
+			updateJob.JobStatus.Status = model.StatusWorking
 		} else {
 			// update job status
-			updateJob.Status = model.StatusSuccess
+			updateJob.JobStatus.Status = model.StatusSuccess
 		}
-		updateJob.Timestamp = time.Now()
+		updateJob.JobStatus.Timestamp = time.Now()
 	} else {
 		// task error
 		retryCount = taskOutput.Context.State.RetryCount
@@ -155,7 +155,7 @@ func (worker *ScheduleWorker) Process(taskOutput *message.TaskOutput) (*message.
 			nextTask = taskOutput.Context.Tasks[currentTask.Catch.Next]
 		} else {
 			retryCount = 0
-			updateJob.Status = model.StatusFailed
+			updateJob.JobStatus.Status = model.StatusFailed
 		}
 	}
 
@@ -174,13 +174,13 @@ func (worker *ScheduleWorker) Process(taskOutput *message.TaskOutput) (*message.
 
 		if timeout != nil && timeout.Before(time.Now()) {
 			hasNext = false
-			updateJob.Status = model.StatusTimeout
+			updateJob.JobStatus.Status = model.StatusTimeout
 
 		}
 
 		if taskExecution > maxTaskExecution {
 			hasNext = false
-			updateJob.Status = model.StatusOverload
+			updateJob.JobStatus.Status = model.StatusOverload
 		}
 
 		taskInput = &message.TaskInput{
@@ -214,7 +214,7 @@ func (worker *ScheduleWorker) Process(taskOutput *message.TaskOutput) (*message.
 	}
 
 	// determine the sequence of update order
-	updateJob.Timestamp = time.Now()
+	updateJob.JobStatus.Timestamp = time.Now()
 	// update job & task
 	go func() {
 		err := worker.UpdateJob(updateJob)

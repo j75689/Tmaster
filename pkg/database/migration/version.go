@@ -1,8 +1,6 @@
 package migration
 
-import (
-	"xorm.io/xorm/migrate"
-)
+import "github.com/go-gormigrate/gormigrate/v2"
 
 // Version is a migrate version of database
 type Version struct {
@@ -11,7 +9,7 @@ type Version struct {
 }
 
 // Migrations is a collection of storage migration patterns
-var Migrations = []*migrate.Migration{
+var Migrations = []*gormigrate.Migration{
 	v202004271600,
 	v202010281508,
 }

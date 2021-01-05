@@ -2,7 +2,6 @@ package wireset
 
 import (
 	"github.com/google/wire"
-	"github.com/rs/zerolog"
 	"github.com/j75689/Tmaster/pkg/config"
 	choiceExecutor "github.com/j75689/Tmaster/pkg/executor/choice"
 	parallelExecutor "github.com/j75689/Tmaster/pkg/executor/parallel"
@@ -16,8 +15,8 @@ import (
 	"github.com/j75689/Tmaster/pkg/worker/initializer"
 	"github.com/j75689/Tmaster/pkg/worker/scheduler"
 	"github.com/j75689/Tmaster/pkg/worker/task"
-
-	"xorm.io/xorm"
+	"github.com/rs/zerolog"
+	"gorm.io/gorm"
 )
 
 var WorkerSet = wire.NewSet(
@@ -29,7 +28,7 @@ var WorkerSet = wire.NewSet(
 
 func InitializeWorker(
 	config config.Config,
-	db *xorm.Engine,
+	db *gorm.DB,
 	lock lock.Locker,
 	logger zerolog.Logger,
 	tracer *opentracer.ServiceTracer,
@@ -67,7 +66,7 @@ func InitializeScheduleWorker(
 
 func InitializeDBHelperWorker(
 	config config.Config,
-	db *xorm.Engine,
+	db *gorm.DB,
 ) *dbhelper.DBHelperWorker {
 	return dbhelper.NewWorker(config, db)
 }

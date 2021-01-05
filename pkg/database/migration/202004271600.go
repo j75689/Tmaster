@@ -1,27 +1,27 @@
 package migration
 
 import (
+	"github.com/go-gormigrate/gormigrate/v2"
 	"github.com/j75689/Tmaster/pkg/database/model"
-	"xorm.io/xorm"
-	"xorm.io/xorm/migrate"
+	"gorm.io/gorm"
 )
 
-var v202004271600 = &migrate.Migration{
+var v202004271600 = &gormigrate.Migration{
 	ID: "202004271600",
-	Migrate: func(tx *xorm.Engine) error {
-		if err := tx.Sync2(&model.Job{}); err != nil {
+	Migrate: func(tx *gorm.DB) error {
+		if err := tx.AutoMigrate(&model.Job{}); err != nil {
 			return err
 		}
-		if err := tx.Sync2(&model.Task{}); err != nil {
+		if err := tx.AutoMigrate(&model.Task{}); err != nil {
 			return err
 		}
 		return nil
 	},
-	Rollback: func(tx *xorm.Engine) error {
-		if err := tx.DropTables(&model.Job{}); err != nil {
+	Rollback: func(tx *gorm.DB) error {
+		if err := tx.Migrator().DropTable(&model.Job{}); err != nil {
 			return err
 		}
-		if err := tx.DropTables(&model.Task{}); err != nil {
+		if err := tx.Migrator().DropTable(&model.Task{}); err != nil {
 			return err
 		}
 		return nil

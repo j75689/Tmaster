@@ -66,20 +66,20 @@ func (r *queryResolver) GetJob(ctx context.Context, id *int) (*model.JobStatus, 
 	}
 	defer traceRecord.Finish()
 
-	job := []*dbmodel.Job{}
-	if err := r.Resolver.db.Where("id=?", *id).Find(&job); err != nil {
+	job := dbmodel.Job{}
+	if err := r.Resolver.db.Where("id=?", *id).First(&job).Error; err != nil {
 		return nil, err
 	}
 
 	task := []*dbmodel.Task{}
-	if err := r.Resolver.db.Where("job_id=?", *id).Find(&task); err != nil {
+	if err := r.Resolver.db.Where("job_id=?", *id).Find(&task).Error; err != nil {
 		return nil, err
 	}
 
 	for _, details := range task {
-		job[0].JobStatus.TaskHistory = append(job[0].JobStatus.TaskHistory, details.TaskHistory)
+		job.JobStatus.TaskHistory = append(job.JobStatus.TaskHistory, details.TaskHistory)
 	}
-	return job[0].JobStatus, nil
+	return job.JobStatus, nil
 }
 
 func (r *queryResolver) GetJobs(ctx context.Context, id []*int) ([]*model.JobStatus, error) {
@@ -92,19 +92,19 @@ func (r *queryResolver) GetJobs(ctx context.Context, id []*int) ([]*model.JobSta
 	jobs := []*dbmodel.Job{}
 	var jobStatus []*model.JobStatus
 
-	if err := r.Resolver.db.In("id", id).Find(&jobs); err != nil {
+	if err := r.Resolver.db.Where("id in (?)", id).Find(&jobs).Error; err != nil {
 		return nil, err
 	}
 
-	for _, id := range id {
+	for idx, id := range id {
 		task := []*dbmodel.Task{}
 
-		if err := r.Resolver.db.Where("job_id=?", id).Find(&task); err != nil {
+		if err := r.Resolver.db.Where("job_id=?", id).Find(&task).Error; err != nil {
 			return nil, err
 		}
 
 		for _, details := range task {
-			jobs[*id-1].JobStatus.TaskHistory = append(jobs[*id-1].JobStatus.TaskHistory, details.TaskHistory)
+			jobs[idx].JobStatus.TaskHistory = append(jobs[idx].JobStatus.TaskHistory, details.TaskHistory)
 		}
 	}
 

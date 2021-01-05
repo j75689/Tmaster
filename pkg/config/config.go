@@ -119,20 +119,23 @@ type PushQueue struct {
 }
 
 type DBConfig struct {
-	Driver       string        `mapstructure:"driver"`
-	Host         string        `mapstructure:"host"`
-	Port         uint          `mapstructure:"port"`
-	DBName       string        `mapstructure:"dbname"`
-	InstanceName string        `mapstructure:"instance_name"`
-	User         string        `mapstructure:"user"`
-	Password     string        `mapstructure:"password"`
-	DialTimeout  time.Duration `mapstructure:"dial_timeout"`
-	MaxLifetime  time.Duration `mapstructure:"max_lifetime"`
-	MaxIdleConn  int           `mapstructure:"max_idle_conn"`
-	MaxOpenConn  int           `mapstructure:"max_open_conn"`
-	SSLMode      bool          `mapstructure:"ssl_mode"`
-	LogLevel     int           `mapstructure:"log_level"`
-	ShowSQL      bool          `mapstructure:"show_sql"`
+	Driver         string        `mapstructure:"driver"`
+	Host           string        `mapstructure:"host"`
+	Port           uint          `mapstructure:"port"`
+	DBName         string        `mapstructure:"dbname"`
+	InstanceName   string        `mapstructure:"instance_name"`
+	User           string        `mapstructure:"user"`
+	Password       string        `mapstructure:"password"`
+	ConnectTimeout string        `mapstructure:"connect_timeout"`
+	ReadTimeout    string        `mapstructure:"read_timeout"`
+	WriteTimeout   string        `mapstructure:"write_timeout"`
+	DialTimeout    time.Duration `mapstructure:"dial_timeout"`
+	MaxLifetime    time.Duration `mapstructure:"max_lifetime"`
+	MaxIdleTime    time.Duration `mapstructure:"max_idletime"`
+	MaxIdleConn    int           `mapstructure:"max_idle_conn"`
+	MaxOpenConn    int           `mapstructure:"max_open_conn"`
+	SSLMode        bool          `mapstructure:"ssl_mode"`
+	LogLevel       int           `mapstructure:"log_level"`
 }
 
 type RedisConfig struct {

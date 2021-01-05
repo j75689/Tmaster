@@ -63,9 +63,13 @@ task_worker:
         topic: tmaster_task_output
     
 db:
-    show_sql: true
+    driver: mysql
+    log_level: 4 # 1->Silent, 2->Error, 3->Warn, 4->Info
     host: localhost
     port: 3306
+    user: test
+    password: test
+    dbname: local
 
 mq:
     driver: redis_stream

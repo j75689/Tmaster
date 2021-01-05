@@ -12,11 +12,11 @@ import (
 	"github.com/j75689/Tmaster/pkg/worker/dbhelper"
 	"github.com/rs/zerolog"
 	"golang.org/x/sync/errgroup"
-	"xorm.io/xorm"
+	"gorm.io/gorm"
 )
 
 type Application struct {
-	db     *xorm.Engine
+	db     *gorm.DB
 	config config.Config
 	logger zerolog.Logger
 	worker *dbhelper.DBHelperWorker
@@ -39,7 +39,7 @@ func (application Application) Start() error {
 			application.logger.Debug().Dur("duration", time.Since(t)).Msg("decompress input message")
 
 			t = time.Now()
-			application.logger.Trace().Bytes("data", data).Msg("recived message")
+			application.logger.Trace().Bytes("data", data).Msg("received message")
 			var job dbmodel.Job
 			err = json.Unmarshal(data, &job)
 			if err != nil {
@@ -54,7 +54,7 @@ func (application Application) Start() error {
 			}
 			application.logger.Debug().Dur("duration", time.Since(t)).Msg("process update job")
 			defer func() {
-				application.logger.Debug().Str("job_id", job.JobID).Dur("duration", time.Since(ft)).Msg("completed message")
+				application.logger.Debug().Str("job_id", job.JobStatus.JobID).Dur("duration", time.Since(ft)).Msg("completed message")
 			}()
 			return nil
 		}); err != nil {
@@ -75,7 +75,7 @@ func (application Application) Start() error {
 			application.logger.Debug().Dur("duration", time.Since(t)).Msg("decompress input message")
 
 			t = time.Now()
-			application.logger.Trace().Bytes("data", data).Msg("recived message")
+			application.logger.Trace().Bytes("data", data).Msg("received message")
 			var Task dbmodel.Task
 			err = json.Unmarshal(data, &Task)
 			if err != nil {
@@ -90,7 +90,7 @@ func (application Application) Start() error {
 			}
 			application.logger.Debug().Dur("duration", time.Since(t)).Msg("process create task")
 			defer func() {
-				application.logger.Debug().Str("task_id", Task.TaskID).Dur("duration", time.Since(ft)).Msg("completed message")
+				application.logger.Debug().Str("task_id", Task.TaskHistory.TaskID).Dur("duration", time.Since(ft)).Msg("completed message")
 			}()
 			return nil
 		}); err != nil {
@@ -112,7 +112,11 @@ func (application Application) Shutdown() error {
 	application.logger.Info().Msg("mq stopped")
 
 	application.logger.Info().Msg("close db ...")
-	err := application.db.Close()
+	db, err := application.db.DB()
+	if err != nil {
+		return err
+	}
+	err = db.Close()
 	if err != nil {
 		return err
 	}
@@ -123,7 +127,7 @@ func (application Application) Shutdown() error {
 func newApplication(
 	config config.Config,
 	mq mq.MQ,
-	db *xorm.Engine,
+	db *gorm.DB,
 	worker *dbhelper.DBHelperWorker,
 	logger zerolog.Logger,
 ) Application {

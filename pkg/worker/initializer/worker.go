@@ -14,7 +14,7 @@ import (
 	"github.com/j75689/Tmaster/pkg/utils/parser"
 	"github.com/rs/xid"
 	"github.com/rs/zerolog"
-	"xorm.io/xorm"
+	"gorm.io/gorm"
 )
 
 const (
@@ -23,7 +23,7 @@ const (
 
 func NewWorker(
 	config config.Config,
-	db *xorm.Engine,
+	db *gorm.DB,
 	lock lock.Locker,
 	logger zerolog.Logger,
 	lockTimeout time.Duration,
@@ -41,7 +41,7 @@ func NewWorker(
 
 type InitializeWorker struct {
 	config      config.Config
-	db          *xorm.Engine
+	db          *gorm.DB
 	lock        lock.Locker
 	logger      zerolog.Logger
 	lockTimeout time.Duration
@@ -91,7 +91,7 @@ func (worker *InitializeWorker) Process(initJob *message.InitJob) (*message.Task
 			Timestamp: now,
 		},
 	}
-	if _, err := worker.db.InsertOne(job); err != nil {
+	if err := worker.db.Create(job).Error; err != nil {
 		return nil, err
 	}
 
@@ -118,8 +118,8 @@ func (worker *InitializeWorker) Process(initJob *message.InitJob) (*message.Task
 	}
 
 	if timeout != nil && timeout.Before(time.Now()) {
-		job.Status = model.StatusTimeout
-		_, err := worker.db.Update(job)
+		job.JobStatus.Status = model.StatusTimeout
+		err := worker.db.Updates(job).Error
 		if err != nil {
 			return nil, err
 		}
@@ -134,8 +134,8 @@ func (worker *InitializeWorker) Process(initJob *message.InitJob) (*message.Task
 	taskExecution := 1
 
 	if taskExecution > maxTaskExecution {
-		job.Status = model.StatusOverload
-		_, err := worker.db.Update(job)
+		job.JobStatus.Status = model.StatusOverload
+		err := worker.db.Updates(job).Error
 		if err != nil {
 			return nil, err
 		}
@@ -173,7 +173,7 @@ func (worker *InitializeWorker) Process(initJob *message.InitJob) (*message.Task
 		}
 	} else {
 		job.JobStatus.Status = model.StatusSuccess
-		_, err := worker.db.Update(job)
+		err := worker.db.Updates(job).Error
 		if err != nil {
 			return nil, err
 		}

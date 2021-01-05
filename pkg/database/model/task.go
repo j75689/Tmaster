@@ -7,12 +7,12 @@ import (
 )
 
 type Task struct {
-	ID                 int64
-	Name               string
-	Created            time.Time `xorm:"created"`
-	Updated            time.Time `xorm:"updated"`
-	*model.TaskHistory `xorm:"extends"`
-	JobID              int64           `xorm:"index"`
-	ErrorCode          model.ErrorCode `xorm:"error_code"`
-	ErrorMessage       string          `xorm:"'error_message' text"`
+	ID           int64
+	Name         string `gorm:"type:varchar(1024)"`
+	Created      time.Time
+	Updated      time.Time
+	TaskHistory  *model.TaskHistory `gorm:"embedded"`
+	JobID        int64              `gorm:"index"`
+	ErrorCode    model.ErrorCode    `gorm:"type:varchar(255)"`
+	ErrorMessage string             `gorm:"type:text"`
 }

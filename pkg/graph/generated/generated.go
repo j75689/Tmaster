@@ -14,6 +14,7 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
 	"github.com/j75689/Tmaster/pkg/graph/model"
+	"github.com/j75689/Tmaster/pkg/graph/scalar"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -477,10 +478,10 @@ input Endpoint {
 `, BuiltIn: false},
 	&ast.Source{Name: "pkg/schema/job_output.graphqls", Input: `
 type JobStatus{
-  job_id: ID!
-  status: Status! @extraTag(xorm: "index")
+  job_id: ID! @extraTag(gorm: "type: varchar(255)")
+  status: Status! @extraTag(gorm: "index; type: varchar(64)")
   timestamp: Timestamp!
-  task_history: [TaskHistory] @extraTag(xorm: "-")
+  task_history: [TaskHistory] @extraTag(gorm: "-")
 }
 
 scalar Map
@@ -502,16 +503,16 @@ enum Cause {
 }
 
 type TaskHistory {
-    from: ID!
-    cause: Cause!
-    task_id: ID!
-    status: Status!
+    from: ID! @extraTag(gorm: "type: varchar(255)")
+    cause: Cause! @extraTag(gorm: "type: varchar(255)")
+    task_id: ID! @extraTag(gorm: "type: varchar(255)")
+    status: Status! @extraTag(gorm: "type: varchar(64)")
     retry_count: Int
     executed_at: Timestamp
     cancelled_at: Timestamp
     completed_at: Timestamp
-    input: Map @extraTag(xorm: "LONGTEXT")
-    output: Map @extraTag(xorm: "LONGTEXT")
+    input: Map @extraTag(gorm: "type: json")
+    output: Map @extraTag(gorm: "type: json")
 }
 `, BuiltIn: false},
 }
@@ -1218,9 +1219,9 @@ func (ec *executionContext) _TaskHistory_input(ctx context.Context, field graphq
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(map[string]interface{})
+	res := resTmp.(scalar.Map)
 	fc.Result = res
-	return ec.marshalOMap2map(ctx, field.Selections, res)
+	return ec.marshalOMap2githubᚗcomᚋj75689ᚋTmasterᚋpkgᚋgraphᚋscalarᚐMap(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _TaskHistory_output(ctx context.Context, field graphql.CollectedField, obj *model.TaskHistory) (ret graphql.Marshaler) {
@@ -1249,9 +1250,9 @@ func (ec *executionContext) _TaskHistory_output(ctx context.Context, field graph
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(map[string]interface{})
+	res := resTmp.(scalar.Map)
 	fc.Result = res
-	return ec.marshalOMap2map(ctx, field.Selections, res)
+	return ec.marshalOMap2githubᚗcomᚋj75689ᚋTmasterᚋpkgᚋgraphᚋscalarᚐMap(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -4049,18 +4050,19 @@ func (ec *executionContext) unmarshalOKVItemInput2ᚖgithubᚗcomᚋj75689ᚋTma
 	return &res, err
 }
 
-func (ec *executionContext) unmarshalOMap2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) unmarshalOMap2githubᚗcomᚋj75689ᚋTmasterᚋpkgᚋgraphᚋscalarᚐMap(ctx context.Context, v interface{}) (scalar.Map, error) {
 	if v == nil {
 		return nil, nil
 	}
-	return graphql.UnmarshalMap(v)
+	var res scalar.Map
+	return res, res.UnmarshalGQL(v)
 }
 
-func (ec *executionContext) marshalOMap2map(ctx context.Context, sel ast.SelectionSet, v map[string]interface{}) graphql.Marshaler {
+func (ec *executionContext) marshalOMap2githubᚗcomᚋj75689ᚋTmasterᚋpkgᚋgraphᚋscalarᚐMap(ctx context.Context, sel ast.SelectionSet, v scalar.Map) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	return graphql.MarshalMap(v)
+	return v
 }
 
 func (ec *executionContext) unmarshalORetry2githubᚗcomᚋj75689ᚋTmasterᚋpkgᚋgraphᚋmodelᚐRetry(ctx context.Context, v interface{}) (model.Retry, error) {
