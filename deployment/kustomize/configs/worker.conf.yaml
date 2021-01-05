@@ -22,7 +22,6 @@ task_worker:
         topic: tmaster_task_output
     
 db:
-    show_sql: true
     host: localhost
     port: 3306
 

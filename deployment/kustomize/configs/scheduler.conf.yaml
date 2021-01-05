@@ -25,7 +25,6 @@ task_scheduler:
         topic: tmaster_task_db_helper
     
 db:
-    show_sql: true
     host: localhost
     port: 3306
 

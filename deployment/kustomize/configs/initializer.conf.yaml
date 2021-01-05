@@ -19,7 +19,6 @@ job_initializer:
         topic: tmaster_task_input
     
 db:
-    show_sql: true
     host: localhost
     port: 3306
 
