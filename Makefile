@@ -3,7 +3,7 @@
 PROJECT_PATH=$(shell pwd)
 GO_TEST_CMD=$(if $(shell which richgo),richgo test,go test)
 REPO=github.com/j75689/Tmaster
-VERSION=$(shell git symbolic-ref --short HEAD)
+VERSION=$(shell git describe --tags)
 GIT_COMMIT=$(shell git rev-parse HEAD)
 GIT_COMMIT_DATE=$(shell git log -n1 --pretty='format:%cd' --date=format:'%Y-%m-%d_%H:%M:%S')
 
