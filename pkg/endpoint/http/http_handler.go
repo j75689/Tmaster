@@ -14,6 +14,7 @@ import (
 
 	"github.com/j75689/Tmaster/pkg/endpoint"
 	"github.com/j75689/Tmaster/pkg/graph/model"
+	"github.com/j75689/Tmaster/pkg/utils/parser"
 	"github.com/rs/zerolog"
 )
 
@@ -79,7 +80,7 @@ func (handler *HttpHandler) Do(ctx context.Context, endpointConfig *model.Endpoi
 	}
 	req = req.WithContext(ctx)
 	for _, item := range endpointConfig.Headers {
-		req.Header.Set(item.Key, item.Value)
+		req.Header.Set(item.Key, parser.RemoveDoubleQuotes(item.Value))
 	}
 	resp, err := client.Do(req)
 	if err != nil {
