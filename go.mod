@@ -18,7 +18,7 @@ require (
 	github.com/go-redis/redis/v8 v8.4.4
 	github.com/golang/mock v1.4.4
 	github.com/gomodule/redigo v1.8.3 // indirect
-	github.com/google/wire v0.4.0
+	github.com/google/wire v0.5.0
 	github.com/jhump/protoreflect v1.7.0
 	github.com/nats-io/nats-streaming-server v0.19.0 // indirect
 	github.com/nats-io/nats.go v1.10.1-0.20200909191325-42c4036ae739
