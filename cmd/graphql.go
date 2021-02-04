@@ -5,9 +5,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/j75689/Tmaster/pkg/utils/launcher"
-	"github.com/j75689/Tmaster/services/graphql"
+	"github.com/j75689/Tmaster/service/graphql"
+	"github.com/spf13/cobra"
 )
 
 var (
