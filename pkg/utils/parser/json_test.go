@@ -348,6 +348,96 @@ func TestReplaceVariables(t *testing.T) {
 			wantReply: []byte(`abcd: \"<<&>>\"`),
 			wantErr:   false,
 		},
+		{
+			name: "TestReplaceVariables Case 9",
+			args: args{
+				config: []byte(`abcd: ${{xx.xx.abc.cccc || xx.xx.abc | replace '"'}}`),
+				variables: map[string]interface{}{
+					"xx": map[string]interface{}{
+						"xx": map[string]interface{}{
+							"abc": "te\"st",
+						},
+					},
+				},
+			},
+			wantReply: []byte(`abcd: test`),
+			wantErr:   false,
+		},
+		{
+			name: "TestReplaceVariables Case 10",
+			args: args{
+				config: []byte(`abcd: ${xx.xx.abc.cccc || xx.xx.abc | replace '"'}`),
+				variables: map[string]interface{}{
+					"xx": map[string]interface{}{
+						"xx": map[string]interface{}{
+							"abc": "te\"st",
+						},
+					},
+				},
+			},
+			wantReply: []byte(`abcd: \"test\"`),
+			wantErr:   false,
+		},
+		{
+			name: "TestReplaceVariables Case 11",
+			args: args{
+				config: []byte(`abcd: "${{xx.xx.abc.cccc || xx.xx.abc | quote }}"`),
+				variables: map[string]interface{}{
+					"xx": map[string]interface{}{
+						"xx": map[string]interface{}{
+							"abc": "te\"st",
+						},
+					},
+				},
+			},
+			wantReply: []byte(`abcd: "te\"st"`),
+			wantErr:   false,
+		},
+		{
+			name: "TestReplaceVariables Case 12",
+			args: args{
+				config: []byte(`abcd: "${{xx.xx.abc.cccc || xx.xx.abc | unquote }}"`),
+				variables: map[string]interface{}{
+					"xx": map[string]interface{}{
+						"xx": map[string]interface{}{
+							"abc": `"te\\\"st"`,
+						},
+					},
+				},
+			},
+			wantReply: []byte(`abcd: "te\"st"`),
+			wantErr:   false,
+		},
+		{
+			name: "TestReplaceVariables Case 13",
+			args: args{
+				config: []byte(`abcd: "${{xx.xx.abc.cccc || xx.xx.abc | base64encode }}"`),
+				variables: map[string]interface{}{
+					"xx": map[string]interface{}{
+						"xx": map[string]interface{}{
+							"abc": "test",
+						},
+					},
+				},
+			},
+			wantReply: []byte(`abcd: "dGVzdA=="`),
+			wantErr:   false,
+		},
+		{
+			name: "TestReplaceVariables Case 14",
+			args: args{
+				config: []byte(`abcd: "${{xx.xx.abc.cccc || xx.xx.abc | base64decode | replace t }}"`),
+				variables: map[string]interface{}{
+					"xx": map[string]interface{}{
+						"xx": map[string]interface{}{
+							"abc": "dGVzdA==",
+						},
+					},
+				},
+			},
+			wantReply: []byte(`abcd: "es"`),
+			wantErr:   false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

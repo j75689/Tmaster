@@ -11,20 +11,29 @@ import (
 )
 
 func ReplaceVariables(config []byte, variables interface{}) ([]byte, error) {
-	r, err := regexp.Compile(`\$\{(.*?)\}`)
+	r, err := regexp.Compile(`\$\{({.*?})\}|\$\{(.*?)\}`)
 	if err != nil {
 		return config, err
 	}
 
 	for _, match := range r.FindAllStringSubmatch(string(config), -1) {
 		var (
-			v     interface{}
-			value string
-			err   error
+			v         interface{}
+			value     string
+			err       error
+			matchPipe = match[2]
+			isQuote   = true
 		)
 
+		if len(match[1]) > 0 {
+			isQuote = false
+			matchPipe = match[1]
+			matchPipe = strings.TrimPrefix(matchPipe, "{")
+			matchPipe = strings.TrimSuffix(matchPipe, "}")
+		}
+
 		// find variable
-		matchKeys := strings.Split(match[1], "||")
+		matchKeys := strings.Split(matchPipe, "||")
 		for _, matchKey := range matchKeys {
 			pipes := strings.Split(matchKey, "|")
 			for _, pipe := range pipes {
@@ -34,7 +43,7 @@ func ReplaceVariables(config []byte, variables interface{}) ([]byte, error) {
 				if err != nil && errors.Is(err, errCmdNotFound) {
 					v, err = getJSONValue(strings.Split(strings.TrimSpace(cmds[0]), "."), variables)
 				} else {
-					break
+					continue
 				}
 			}
 
@@ -48,18 +57,30 @@ func ReplaceVariables(config []byte, variables interface{}) ([]byte, error) {
 		if v != nil {
 			nValue := ""
 			if s, ok := v.(string); ok {
-				nValue = strconv.Quote(strconv.Quote(string(s)))
+				nValue = string(s)
+				if isQuote {
+					nValue = strconv.Quote(strconv.Quote(string(s)))
+				}
 			} else {
 				vv, err := json.Marshal(v)
 				if err != nil {
-					nValue = strconv.Quote(fmt.Sprint(v))
+					nValue = fmt.Sprint(v)
 				} else {
-					nValue = strconv.Quote(string(vv))
+					nValue = string(vv)
+				}
+				if isQuote {
+					nValue = strconv.Quote(nValue)
 				}
 			}
-			value = nValue[1 : len(nValue)-1]
+			value = nValue
+			if isQuote {
+				value = nValue[1 : len(nValue)-1]
+			}
 		} else {
-			value = `\"` + match[1] + `\"`
+			value = matchPipe
+			if isQuote {
+				value = `\"` + matchPipe + `\"`
+			}
 		}
 		// replace
 		config = bytes.Replace(config, []byte(match[0]), []byte(value), -1)
