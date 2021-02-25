@@ -129,7 +129,7 @@ var (
 )
 
 func ParseCmd(key string) (keys []string) {
-	r := regexp.MustCompile(`([\w\.]+)|'(.*?)'|"(.*?)"|(\$\{.*?\})`)
+	r := regexp.MustCompile(`([\w\.\-]+)|'(.*?)'|"(.*?)"|(\$\{.*?\})`)
 	temp := r.FindAllString(key, -1)
 	for _, key := range temp {
 		if strings.HasPrefix(key, `'`) && strings.HasSuffix(key, `'`) {
