@@ -32,6 +32,10 @@ func ReplaceVariables(config []byte, variables interface{}) ([]byte, error) {
 			matchPipe = strings.TrimSuffix(matchPipe, "}")
 		}
 
+		if len(matchPipe) <= 0 {
+			return bytes.Replace(config, []byte(match[0]), nil, -1), nil
+		}
+
 		// find variable
 		matchKeys := strings.Split(matchPipe, "||")
 		for _, matchKey := range matchKeys {

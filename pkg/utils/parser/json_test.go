@@ -438,6 +438,36 @@ func TestReplaceVariables(t *testing.T) {
 			wantReply: []byte(`abcd: "es"`),
 			wantErr:   false,
 		},
+		{
+			name: "TestReplaceVariables Case 15",
+			args: args{
+				config: []byte(`abcd: "${{}}"`),
+				variables: map[string]interface{}{
+					"xx": map[string]interface{}{
+						"xx": map[string]interface{}{
+							"abc": "dGVzdA==",
+						},
+					},
+				},
+			},
+			wantReply: []byte(`abcd: ""`),
+			wantErr:   false,
+		},
+		{
+			name: "TestReplaceVariables Case 16",
+			args: args{
+				config: []byte(`abcd: "${}"`),
+				variables: map[string]interface{}{
+					"xx": map[string]interface{}{
+						"xx": map[string]interface{}{
+							"abc": "dGVzdA==",
+						},
+					},
+				},
+			},
+			wantReply: []byte(`abcd: ""`),
+			wantErr:   false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
