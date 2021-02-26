@@ -117,6 +117,30 @@ func getJSONValue(path []string, variables interface{}) (interface{}, error) {
 	case map[string]interface{}:
 		variables = (variables.(map[string]interface{}))[path[0]]
 		return getJSONValue(path[1:], variables)
+	case map[string]string:
+		variables = (variables.(map[string]string))[path[0]]
+		return getJSONValue(path[1:], variables)
+	case map[string]int:
+		variables = (variables.(map[string]int))[path[0]]
+		return getJSONValue(path[1:], variables)
+	case map[string]int8:
+		variables = (variables.(map[string]int8))[path[0]]
+		return getJSONValue(path[1:], variables)
+	case map[string]int16:
+		variables = (variables.(map[string]int16))[path[0]]
+		return getJSONValue(path[1:], variables)
+	case map[string]int32:
+		variables = (variables.(map[string]int32))[path[0]]
+		return getJSONValue(path[1:], variables)
+	case map[string]int64:
+		variables = (variables.(map[string]int64))[path[0]]
+		return getJSONValue(path[1:], variables)
+	case map[string]float32:
+		variables = (variables.(map[string]float32))[path[0]]
+		return getJSONValue(path[1:], variables)
+	case map[string]float64:
+		variables = (variables.(map[string]float64))[path[0]]
+		return getJSONValue(path[1:], variables)
 	}
 
 	return variables, errors.New("invalid path")
