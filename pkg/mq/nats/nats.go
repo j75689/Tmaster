@@ -9,11 +9,11 @@ import (
 	"sync"
 	"time"
 
+	"github.com/j75689/Tmaster/pkg/config"
+	"github.com/j75689/Tmaster/pkg/mq"
 	nats "github.com/nats-io/nats.go"
 	stan "github.com/nats-io/stan.go"
 	"github.com/rs/zerolog"
-	"github.com/j75689/Tmaster/pkg/config"
-	"github.com/j75689/Tmaster/pkg/mq"
 )
 
 var _ mq.MQ = (*Nats)(nil)
@@ -224,7 +224,7 @@ type Subscriber struct {
 func (sub *Subscriber) Start(stanConn stan.Conn) error {
 	sub.logger.Info().Msg("start subscribe: " + sub.projectID + "." + sub.subscription)
 	sub.workerChannel = make(chan *stan.Msg)
-	_, err := stanConn.QueueSubscribe(sub.projectID+"."+sub.subscription, sub.queueGroup, func(m *stan.Msg) {
+	s, err := stanConn.QueueSubscribe(sub.projectID+"."+sub.subscription, sub.queueGroup, func(m *stan.Msg) {
 		sub.workerChannel <- m
 	},
 		stan.StartWithLastReceived(),
@@ -233,6 +233,10 @@ func (sub *Subscriber) Start(stanConn stan.Conn) error {
 		stan.AckWait(sub.ackWait),
 		stan.MaxInflight(sub.maxInflight),
 	)
+	if err != nil {
+		return err
+	}
+	err = s.SetPendingLimits(sub.workerSize, -1)
 	if err != nil {
 		return err
 	}
