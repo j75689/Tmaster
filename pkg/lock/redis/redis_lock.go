@@ -73,16 +73,16 @@ func (locker *RedisLocker) flushAutoDelayLock(flushTime time.Duration) {
 	}()
 }
 
-func (locker *RedisLocker) checkCtx(ctx context.Context) context.Context {
+func (locker *RedisLocker) checkCtx(ctx context.Context) (context.Context, context.CancelFunc) {
 	if ctx != nil {
-		return ctx
+		return context.WithCancel(ctx)
 	}
-	ctx, _ = context.WithTimeout(context.Background(), locker.timeout)
-	return ctx
+	return context.WithTimeout(context.Background(), locker.timeout)
 }
 
 func (locker *RedisLocker) LockWithAutoDelay(ctx context.Context, key string) (bool, error) {
-	ctx = locker.checkCtx(ctx)
+	ctx, cancel := locker.checkCtx(ctx)
+	defer cancel()
 	lock, err := locker.client.Obtain(ctx, key, locker.timeout, nil)
 	if err != nil {
 		return false, err
@@ -95,7 +95,8 @@ func (locker *RedisLocker) LockWithAutoDelay(ctx context.Context, key string) (b
 }
 
 func (locker *RedisLocker) Lock(ctx context.Context, key string) (bool, error) {
-	ctx = locker.checkCtx(ctx)
+	ctx, cancel := locker.checkCtx(ctx)
+	defer cancel()
 	lock, err := locker.client.Obtain(ctx, key, locker.timeout, nil)
 	if err != nil {
 		return false, err
@@ -105,7 +106,8 @@ func (locker *RedisLocker) Lock(ctx context.Context, key string) (bool, error) {
 }
 
 func (locker *RedisLocker) UnLock(ctx context.Context, key string) error {
-	ctx = locker.checkCtx(ctx)
+	ctx, cancel := locker.checkCtx(ctx)
+	defer cancel()
 	if v, ok := locker.locks.Load(key); ok {
 		if lock, ok := v.(*redislock.Lock); ok {
 			defer locker.locks.Delete(key)
@@ -122,7 +124,8 @@ func (locker *RedisLocker) UnLock(ctx context.Context, key string) error {
 }
 
 func (locker *RedisLocker) Delay(ctx context.Context, key string) (bool, error) {
-	ctx = locker.checkCtx(ctx)
+	ctx, cancel := locker.checkCtx(ctx)
+	defer cancel()
 	if v, ok := locker.locks.Load(key); ok {
 		if lock, ok := v.(*redislock.Lock); ok {
 			if err := lock.Refresh(ctx, locker.timeout, nil); err != nil {
