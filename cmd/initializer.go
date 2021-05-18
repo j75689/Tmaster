@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	initialzierCmd = &cobra.Command{
+	initializerCmd = &cobra.Command{
 		Use:           "initializer",
 		Short:         "Start job initializer",
 		SilenceUsage:  true,
