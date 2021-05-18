@@ -24,7 +24,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.AddCommand(versionCmd, graphqlCmd, workerCmd, schedulerCmd, initialzierCmd, dbHelperCmd, migrateCmd, initMQCmd)
+	rootCmd.AddCommand(versionCmd, graphqlCmd, workerCmd, schedulerCmd, initializerCmd, dbHelperCmd, migrateCmd, initMQCmd)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "config/default.config.yaml", "config file")
 	rootCmd.PersistentFlags().UintVar(&timeout, "timeout", 300, "graceful shutdown timeout (second)")
 }
