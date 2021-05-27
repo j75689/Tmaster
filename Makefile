@@ -12,13 +12,13 @@ tools:
 	@git clone https://github.com/j75689/gqlgen.git ${GOPATH}/src/github.com/j75689/gqlgen
 	@cd ${GOPATH}/src/github.com/j75689/gqlgen && git checkout feat/custom-struct-tag && go install
 	@go get github.com/google/wire/cmd/wire
-	@GO111MODULE=on go get github.com/golang/mock/mockgen@v1.4.4
+	@go install github.com/golang/mock/mockgen@v1.6.0
 
 gen:
 	# generate model & reslover
 	@gqlgen
 	# generate dependency injection
-	@wire ./...
+	@wire ./service/...
 
 mock-gen:
 	@mockgen -package=mock -destination=./mock/mock_gen.go github.com/j75689/Tmaster/pkg/mq MQ
