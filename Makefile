@@ -10,7 +10,7 @@ GIT_COMMIT_DATE=$(shell git log -n1 --pretty='format:%cd' --date=format:'%Y-%m-%
 tools:
 	@rm -rf ${GOPATH}/src/github.com/j75689/gqlgen
 	@git clone https://github.com/j75689/gqlgen.git ${GOPATH}/src/github.com/j75689/gqlgen
-	@cd ${GOPATH}/src/github.com/j75689/gqlgen && go install
+	@cd ${GOPATH}/src/github.com/j75689/gqlgen && git checkout feat/custom-struct-tag && go install
 	@go get github.com/google/wire/cmd/wire
 	@GO111MODULE=on go get github.com/golang/mock/mockgen@v1.4.4
 
