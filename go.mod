@@ -1,6 +1,6 @@
 module github.com/j75689/Tmaster
 
-go 1.15
+go 1.16
 
 require (
 	cloud.google.com/go/pubsub v1.6.2
