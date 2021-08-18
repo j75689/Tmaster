@@ -7,8 +7,7 @@ require (
 	github.com/99designs/gqlgen v0.11.3
 	github.com/HdrHistogram/hdrhistogram-go v1.0.1 // indirect
 	github.com/adjust/rmq/v4 v4.0.0
-	github.com/alicebob/gopher-json v0.0.0-20200520072559-a9ecdc9d1d3a // indirect
-	github.com/alicebob/miniredis v2.5.0+incompatible
+	github.com/alicebob/miniredis/v2 v2.15.1
 	github.com/bsm/redislock v0.7.0
 	github.com/fullstorydev/grpcurl v1.7.0
 	github.com/gin-contrib/logger v0.0.2
@@ -17,7 +16,6 @@ require (
 	github.com/go-gormigrate/gormigrate/v2 v2.0.0
 	github.com/go-redis/redis/v8 v8.4.4
 	github.com/golang/mock v1.4.4
-	github.com/gomodule/redigo v1.8.3 // indirect
 	github.com/google/wire v0.5.0
 	github.com/jhump/protoreflect v1.7.0
 	github.com/nats-io/nats-streaming-server v0.19.0 // indirect
@@ -34,7 +32,6 @@ require (
 	github.com/uber/jaeger-client-go v2.25.0+incompatible
 	github.com/uber/jaeger-lib v2.4.0+incompatible
 	github.com/vektah/gqlparser/v2 v2.0.1
-	github.com/yuin/gopher-lua v0.0.0-20191220021717-ab39c6098bdb // indirect
 	golang.org/x/sync v0.0.0-20200625203802-6e8e738ad208
 	google.golang.org/api v0.32.0
 	google.golang.org/grpc v1.32.0
