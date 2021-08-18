@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alicebob/miniredis"
+	"github.com/alicebob/miniredis/v2"
 	"github.com/bsm/redislock"
 	"github.com/go-redis/redis/v8"
 	"github.com/j75689/Tmaster/pkg/config"
