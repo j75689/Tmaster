@@ -6,3 +6,4 @@ go.sum
 /config/*.json
 pubsub_credentials.json
 /vendor
+Tmaster

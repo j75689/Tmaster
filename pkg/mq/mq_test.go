@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-
 	"github.com/j75689/Tmaster/mock"
 )
 
