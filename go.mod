@@ -15,6 +15,7 @@ require (
 	github.com/gin-gonic/gin v1.7.4
 	github.com/go-gormigrate/gormigrate/v2 v2.0.0
 	github.com/go-redis/redis/v8 v8.4.4
+	github.com/go-zookeeper/zk v1.0.2
 	github.com/golang/mock v1.6.0
 	github.com/google/wire v0.5.0
 	github.com/jhump/protoreflect v1.9.0
