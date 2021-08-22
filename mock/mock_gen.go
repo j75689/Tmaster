@@ -6,34 +6,35 @@ package mock
 
 import (
 	context "context"
-	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
+
+	gomock "github.com/golang/mock/gomock"
 )
 
-// MockMQ is a mock of MQ interface
+// MockMQ is a mock of MQ interface.
 type MockMQ struct {
 	ctrl     *gomock.Controller
 	recorder *MockMQMockRecorder
 }
 
-// MockMQMockRecorder is the mock recorder for MockMQ
+// MockMQMockRecorder is the mock recorder for MockMQ.
 type MockMQMockRecorder struct {
 	mock *MockMQ
 }
 
-// NewMockMQ creates a new mock instance
+// NewMockMQ creates a new mock instance.
 func NewMockMQ(ctrl *gomock.Controller) *MockMQ {
 	mock := &MockMQ{ctrl: ctrl}
 	mock.recorder = &MockMQMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockMQ) EXPECT() *MockMQMockRecorder {
 	return m.recorder
 }
 
-// InitSubscriber mocks base method
+// InitSubscriber mocks base method.
 func (m *MockMQ) InitSubscriber(arg0 context.Context, arg1, arg2 string, arg3 ...string) error {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1, arg2}
@@ -45,14 +46,14 @@ func (m *MockMQ) InitSubscriber(arg0 context.Context, arg1, arg2 string, arg3 ..
 	return ret0
 }
 
-// InitSubscriber indicates an expected call of InitSubscriber
+// InitSubscriber indicates an expected call of InitSubscriber.
 func (mr *MockMQMockRecorder) InitSubscriber(arg0, arg1, arg2 interface{}, arg3 ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1, arg2}, arg3...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InitSubscriber", reflect.TypeOf((*MockMQ)(nil).InitSubscriber), varargs...)
 }
 
-// InitTopic mocks base method
+// InitTopic mocks base method.
 func (m *MockMQ) InitTopic(arg0 context.Context, arg1, arg2 string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InitTopic", arg0, arg1, arg2)
@@ -60,13 +61,13 @@ func (m *MockMQ) InitTopic(arg0 context.Context, arg1, arg2 string) error {
 	return ret0
 }
 
-// InitTopic indicates an expected call of InitTopic
+// InitTopic indicates an expected call of InitTopic.
 func (mr *MockMQMockRecorder) InitTopic(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InitTopic", reflect.TypeOf((*MockMQ)(nil).InitTopic), arg0, arg1, arg2)
 }
 
-// Publish mocks base method
+// Publish mocks base method.
 func (m *MockMQ) Publish(arg0 int64, arg1, arg2 string, arg3 []byte) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Publish", arg0, arg1, arg2, arg3)
@@ -74,25 +75,25 @@ func (m *MockMQ) Publish(arg0 int64, arg1, arg2 string, arg3 []byte) error {
 	return ret0
 }
 
-// Publish indicates an expected call of Publish
+// Publish indicates an expected call of Publish.
 func (mr *MockMQMockRecorder) Publish(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Publish", reflect.TypeOf((*MockMQ)(nil).Publish), arg0, arg1, arg2, arg3)
 }
 
-// Stop mocks base method
+// Stop mocks base method.
 func (m *MockMQ) Stop() {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "Stop")
 }
 
-// Stop indicates an expected call of Stop
+// Stop indicates an expected call of Stop.
 func (mr *MockMQMockRecorder) Stop() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Stop", reflect.TypeOf((*MockMQ)(nil).Stop))
 }
 
-// Subscribe mocks base method
+// Subscribe mocks base method.
 func (m *MockMQ) Subscribe(arg0, arg1 string, arg2 func(context.Context, []byte) error) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Subscribe", arg0, arg1, arg2)
@@ -100,7 +101,7 @@ func (m *MockMQ) Subscribe(arg0, arg1 string, arg2 func(context.Context, []byte)
 	return ret0
 }
 
-// Subscribe indicates an expected call of Subscribe
+// Subscribe indicates an expected call of Subscribe.
 func (mr *MockMQMockRecorder) Subscribe(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Subscribe", reflect.TypeOf((*MockMQ)(nil).Subscribe), arg0, arg1, arg2)
