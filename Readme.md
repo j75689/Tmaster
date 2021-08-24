@@ -1,3 +1,8 @@
+# Introduction
+`Tmaster` is a project born from the inspiration of `AWS Step Function`.
+
+It can be used to orchestrate services and build serverless applications. Workflows manage failures, retries, parallelization, service integrations, and observability so developers can focus on higher-value business logic.
+
 # Infrastructure
 
 ![infrastructure](infra.png)
