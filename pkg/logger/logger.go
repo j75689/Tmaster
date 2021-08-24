@@ -11,10 +11,14 @@ import (
 // NewLogger returns a zerolog.Logger
 func NewLogger(logLevel, logFormat string) (zerolog.Logger, error) {
 	level := zerolog.InfoLevel
-	level, err := zerolog.ParseLevel(strings.ToLower(logLevel))
-	if err != nil {
-		return zerolog.Logger{}, err
+	if len(logLevel) > 0 {
+		l, err := zerolog.ParseLevel(strings.ToLower(logLevel))
+		if err != nil {
+			return zerolog.Logger{}, err
+		}
+		level = l
 	}
+
 	zerolog.SetGlobalLevel(level)
 	zerolog.TimeFieldFormat = time.RFC3339Nano
 
