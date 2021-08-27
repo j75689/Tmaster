@@ -1,0 +1,148 @@
+name: Release
+
+on:
+  push:
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
+
+jobs:
+  build:
+    name: Build Release
+    strategy:
+      matrix:
+        go-version: [1.16.x]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Wire
+        run: |
+          go mod tidy
+          go get github.com/google/wire/cmd/wire
+          wire ./service/...
+
+      # ==============================
+      #       Linux/Macos/Windows Build
+      # ==============================
+
+      - name: Build Binary for ${{matrix.os}}
+        run: go build -ldflags="-X github.com/j75689/Tmaster/cmd.version=$(git describe --tags) -X github.com/j75689/Tmaster/cmd.commitID=$(git rev-parse HEAD) -X github.com/j75689/Tmaster/cmd.commitDate=$(git log -n1 --pretty='format:%cd' --date=format:'%Y-%m-%d_%H:%M:%S')" -o ${{matrix.os}}
+
+      # ==============================
+      #       Upload artifacts
+      # ==============================
+
+      - name: Upload Linux build
+        uses: actions/upload-artifact@v2
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          name: linux
+          path: ubuntu-latest
+
+      - name: Upload MacOS build
+        uses: actions/upload-artifact@v2
+        if: matrix.os == 'macos-latest'
+        with:
+          name: macos
+          path: macos-latest
+      
+      - name: Upload Windows build
+        uses: actions/upload-artifact@v2
+        if: matrix.os == 'windows-latest'
+        with:
+          name: windows
+          path: windows-latest
+
+  release:
+    name: Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+      # ==============================
+      #       Download artifacts
+      # ==============================
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: linux
+          path: ./
+      
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: macos
+          path: ./
+      
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: windows
+          path: ./
+
+      # ==============================
+      #       Create release
+      # ==============================
+      - name: Generate Change Log
+        id: changelog
+        uses: loopwerk/tag-changelog@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          exclude_types: other,doc,chore
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            ${{ steps.changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
+
+      # check download files    
+      - run: ls
+
+      - name: Upload Release Asset - Linux
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./ubuntu-latest
+          asset_name: linux-${{ env.RELEASE_VERSION }}
+          asset_content_type: application/octet-stream
+      
+      - name: Upload Release Asset - MacOS
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./macos-latest
+          asset_name: macos-${{ env.RELEASE_VERSION }}
+          asset_content_type: application/octet-stream
+      
+      - name: Upload Release Asset - Windows
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./windows-latest
+          asset_name: windows-${{ env.RELEASE_VERSION }}
+          asset_content_type: application/octet-stream
