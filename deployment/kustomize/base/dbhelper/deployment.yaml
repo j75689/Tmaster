@@ -28,7 +28,7 @@ spec:
         accesslog-filter-injection: enabled
     spec:
       containers:
-        - image: Tmaster
+        - image: ghcr.io/j75689/tmaster/tmaster:latest
           imagePullPolicy: Always
           name: Tmaster-dbhelper
           args:
@@ -45,7 +45,7 @@ spec:
               name: pubsub-credentials
               subPath: pubsub_credentials.json
       initContainers:
-        - image: Tmaster
+        - image: ghcr.io/j75689/tmaster/tmaster:latest
           imagePullPolicy: Always
           name: Tmaster-migration
           args:
@@ -55,7 +55,7 @@ spec:
           volumeMounts:
             - mountPath: /Tmaster/config
               name: config
-        - image: Tmaster
+        - image: ghcr.io/j75689/tmaster/tmaster:latest
           imagePullPolicy: Always
           name: Tmaster-initmq
           args:
