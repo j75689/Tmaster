@@ -12,6 +12,7 @@ import (
 func NewConfig(configPath string) (config Config, err error) {
 	var file *os.File
 	file, _ = os.Open(configPath)
+	defer file.Close()
 
 	v := viper.New()
 	v.SetConfigType("yaml")
