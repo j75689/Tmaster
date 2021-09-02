@@ -13,8 +13,6 @@ jobs:
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
   test:
-    env:
-      GO111MODULE: on
     strategy:
       matrix:
         go-version: [1.16.x]
@@ -41,4 +39,4 @@ jobs:
     - name: Run Gosec Security Scanner
       uses: securego/gosec@master
       with:
-        args: ./...
+        args: -quiet -confidence high -severity high ./...
