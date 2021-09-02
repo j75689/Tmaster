@@ -56,7 +56,9 @@ func (handler *HttpHandler) Do(ctx context.Context, endpointConfig *model.Endpoi
 
 	client.Transport = &http.Transport{
 		Proxy: proxy,
+		// #nosec G402
 		TLSClientConfig: &tls.Config{
+			MinVersion:         tls.VersionTLS12,
 			InsecureSkipVerify: insecure,
 		},
 	}

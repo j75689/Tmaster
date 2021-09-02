@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -11,7 +12,7 @@ import (
 
 func NewConfig(configPath string) (config Config, err error) {
 	var file *os.File
-	file, _ = os.Open(configPath)
+	file, _ = os.Open(filepath.Clean(configPath))
 	defer file.Close()
 
 	v := viper.New()
