@@ -1,8 +1,7 @@
-name: Test
+name: Checker
 
 on:
   push:
-    # Publish `v1.2.3` tags as releases.
     branches:
       - main
       
@@ -14,10 +13,12 @@ jobs:
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
   test:
+    env:
+      GO111MODULE: on
     strategy:
       matrix:
         go-version: [1.16.x]
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Install Go
@@ -36,3 +37,8 @@ jobs:
 
     - name: Test
       run: go test ./...
+
+    - name: Run Gosec Security Scanner
+      uses: securego/gosec@master
+      with:
+        args: ./...
