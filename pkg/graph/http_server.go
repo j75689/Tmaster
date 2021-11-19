@@ -17,10 +17,6 @@ import (
 	"github.com/rs/zerolog"
 )
 
-const (
-	_OperationName = "graphql_server"
-)
-
 func NewHttpServer(
 	config config.Config,
 	graphqlConfig generated.Config,
