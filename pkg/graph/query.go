@@ -6,7 +6,7 @@ import (
 	"github.com/j75689/Tmaster/pkg/graph/generated"
 )
 
-// ActionHandler reutnrs a gin.handlerFunc that handling graphql action
+// ActionHandler reuters a gin.handlerFunc that handling graphql action
 func (server *HttpServer) ActionHandler(graphqlConfig generated.Config) gin.HandlerFunc {
 	h := handler.NewDefaultServer(generated.NewExecutableSchema(graphqlConfig))
 

@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/rs/xid"
-	"github.com/rs/zerolog"
 	"github.com/j75689/Tmaster/pkg/config"
 	"github.com/j75689/Tmaster/pkg/errors"
 	"github.com/j75689/Tmaster/pkg/executor"
 	"github.com/j75689/Tmaster/pkg/graph/model"
 	"github.com/j75689/Tmaster/pkg/message"
 	"github.com/j75689/Tmaster/pkg/mq"
+	"github.com/rs/xid"
+	"github.com/rs/zerolog"
 )
 
 var _ executor.Executor = (*ParallelExecutor)(nil)
@@ -52,7 +52,7 @@ func (executor *ParallelExecutor) Execute(context message.Context, input interfa
 			executor.config.InitJob.Topic,
 			data,
 		); err != nil {
-			return nil, taskConfig, errors.NewTaskFailelError(fmt.Errorf("publish init sub job [%s] error [%v]", id.String(), err))
+			return nil, taskConfig, errors.NewTaskFailedError(fmt.Errorf("publish init sub job [%s] error [%v]", id.String(), err))
 		}
 	}
 

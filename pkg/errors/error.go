@@ -84,8 +84,8 @@ func NewTimeoutError(e error) *ErrTimeout {
 	return &ErrTimeout{e}
 }
 
-// NewTaskFailelError returns a warpped ErrTaskFailed
-func NewTaskFailelError(e error) *ErrTaskFailed {
+// NewTaskFailedError returns a warpped ErrTaskFailed
+func NewTaskFailedError(e error) *ErrTaskFailed {
 	return &ErrTaskFailed{e}
 }
 

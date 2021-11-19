@@ -110,7 +110,7 @@ func (handler *RedisStreamHandler) getConn(ctx context.Context, addr, password s
 func (handler *RedisStreamHandler) Do(ctx context.Context, endpointConfig *model.Endpoint) (map[string]string, interface{}, error) {
 	handler.logger.Debug().Msg("start redis stream endpoint")
 	defer handler.logger.Debug().Msg("complete redis stream endpoint")
-	handler.logger.Debug().Interface("body", endpointConfig).Msgf("endpoint config")
+	handler.logger.Debug().Interface("body", endpointConfig).Msg("endpoint config")
 
 	var (
 		addr, password, queue, body string

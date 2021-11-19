@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// PlaygroundHandler returns gin.HaandlerFunc that handling graphql playground
+// PlaygroundHandler returns gin.HandlerFunc that handling graphql playground
 func (server *HttpServer) PlaygroundHandler(title string, endpoint string) gin.HandlerFunc {
 	h := playground.Handler(title, endpoint)
 

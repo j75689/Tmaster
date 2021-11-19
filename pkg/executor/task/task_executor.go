@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/rs/zerolog"
 	"github.com/j75689/Tmaster/pkg/endpoint"
 	"github.com/j75689/Tmaster/pkg/endpoint/grpc"
 	"github.com/j75689/Tmaster/pkg/endpoint/http"
@@ -16,6 +15,7 @@ import (
 	"github.com/j75689/Tmaster/pkg/graph/model"
 	"github.com/j75689/Tmaster/pkg/message"
 	"github.com/j75689/Tmaster/pkg/utils/parser"
+	"github.com/rs/zerolog"
 )
 
 var _ executor.Executor = (*TaskExecutor)(nil)
@@ -113,7 +113,7 @@ func (executor *TaskExecutor) Execute(context message.Context, input interface{}
 		}
 		headerResult, handlerResult, err := handler.Do(context.Context, endpointConfig)
 		if err != nil {
-			result.err = errors.NewTaskFailelError(err)
+			result.err = errors.NewTaskFailedError(err)
 
 			// set error message
 			if taskConfig.ErrorPath != nil {
