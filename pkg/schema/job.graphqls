@@ -1,6 +1,3 @@
-directive @extraTag on INPUT_FIELD_DEFINITION
-    | FIELD_DEFINITION
-
 extend type Query {
   GetJob(id: Int): JobStatus
   GetJobs(id: [Int]): [JobStatus]

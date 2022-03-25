@@ -55,6 +55,6 @@ models:
       - github.com/99designs/gqlgen/graphql.Int64
       - github.com/99designs/gqlgen/graphql.Int32
   Timestamp:
-    model: github.com/99designs/gqlgen/example/scalars/model.Timestamp
+    model: github.com/j75689/Tmaster/pkg/graph/scalar.Timestamp
   Map:
     model: github.com/j75689/Tmaster/pkg/graph/scalar.Map

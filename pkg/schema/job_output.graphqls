@@ -1,9 +1,12 @@
+directive @gorm(
+    format: String
+) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
 
 type JobStatus{
-  job_id: ID! @extraTag(gorm: "type: varchar(255)")
-  status: Status! @extraTag(gorm: "index; type: varchar(64)")
+  job_id: ID! @gorm(format: "type: varchar(255)")
+  status: Status! @gorm(format: "index; type: varchar(64)")
   timestamp: Timestamp!
-  task_history: [TaskHistory] @extraTag(gorm: "-")
+  task_history: [TaskHistory] @gorm(format: "-")
 }
 
 scalar Map
@@ -25,14 +28,14 @@ enum Cause {
 }
 
 type TaskHistory {
-    from: ID! @extraTag(gorm: "type: varchar(255)")
-    cause: Cause! @extraTag(gorm: "type: varchar(255)")
-    task_id: ID! @extraTag(gorm: "type: varchar(255)")
-    status: Status! @extraTag(gorm: "type: varchar(64)")
+    from: ID! @gorm(format: "type: varchar(255)")
+    cause: Cause! @gorm(format: "type: varchar(255)")
+    task_id: ID! @gorm(format: "type: varchar(255)")
+    status: Status! @gorm(format: "type: varchar(64)")
     retry_count: Int
     executed_at: Timestamp
     cancelled_at: Timestamp
     completed_at: Timestamp
-    input: Map @extraTag(gorm: "type: json")
-    output: Map @extraTag(gorm: "type: json")
+    input: Map @gorm(format: "type: json")
+    output: Map @gorm(format: "type: json")
 }

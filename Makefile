@@ -8,15 +8,12 @@ GIT_COMMIT=$(shell git rev-parse HEAD)
 GIT_COMMIT_DATE=$(shell git log -n1 --pretty='format:%cd' --date=format:'%Y-%m-%d_%H:%M:%S')
 
 tools:
-	@rm -rf ${GOPATH}/src/github.com/j75689/gqlgen
-	@git clone https://github.com/j75689/gqlgen.git ${GOPATH}/src/github.com/j75689/gqlgen
-	@cd ${GOPATH}/src/github.com/j75689/gqlgen && git checkout feat/custom-struct-tag && go install
 	@go get github.com/google/wire/cmd/wire
 	@go install github.com/golang/mock/mockgen@v1.6.0
 
 gen:
 	# generate model & reslover
-	@gqlgen
+	@go run tool/gqlgen/main.go
 	# generate dependency injection
 	@wire ./service/...
 

@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	cloud.google.com/go/pubsub v1.15.0
-	github.com/99designs/gqlgen v0.11.3
+	github.com/99designs/gqlgen v0.17.2
 	github.com/HdrHistogram/hdrhistogram-go v1.0.1 // indirect
 	github.com/adjust/rmq/v4 v4.0.0
 	github.com/alicebob/miniredis/v2 v2.15.1
@@ -32,7 +32,7 @@ require (
 	github.com/thoas/go-funk v0.7.0
 	github.com/uber/jaeger-client-go v2.25.0+incompatible
 	github.com/uber/jaeger-lib v2.4.0+incompatible
-	github.com/vektah/gqlparser/v2 v2.0.1
+	github.com/vektah/gqlparser/v2 v2.4.0
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	google.golang.org/api v0.54.0
 	google.golang.org/grpc v1.39.1
