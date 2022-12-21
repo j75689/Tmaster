@@ -46,7 +46,7 @@ mutation begin{
           max_attempts: "${max_retry}"
           interval: 1
         }
-		catch: {
+	catch: {
           error_on: [ALL],
           next: "open_baidu_search"
         }
