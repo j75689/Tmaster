@@ -1,7 +1,7 @@
 # Tmaster
 
 <p>
-  <img src="https://img.shields.io/github/workflow/status/j75689/Tmaster/Checker?style=flat-square">
+  <img src="https://img.shields.io/github/actions/workflow/status/j75689/tmaster/checker.yml?branch=main">
   <a href="https://github.com/j75689/Tmaster/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/globocom/go-buffer?color=blue&style=flat-square">
   </a>
