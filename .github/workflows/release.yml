@@ -16,12 +16,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Install Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go-version }}
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Wire
         run: |
@@ -41,21 +41,21 @@ jobs:
       # ==============================
 
       - name: Upload Linux build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: matrix.os == 'ubuntu-latest'
         with:
           name: linux
           path: ubuntu-latest
 
       - name: Upload MacOS build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: matrix.os == 'macos-latest'
         with:
           name: macos
           path: macos-latest
       
       - name: Upload Windows build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: matrix.os == 'windows-latest'
         with:
           name: windows
@@ -74,19 +74,19 @@ jobs:
       # ==============================
 
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: linux
           path: ./
       
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: macos
           path: ./
       
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: windows
           path: ./
@@ -101,48 +101,24 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           exclude_types: other,doc,chore
 
+      # Rename assets
+      - run: |
+          mv ./ubuntu-latest ./linux-${{ env.RELEASE_VERSION }}
+          mv ./macos-latest ./macos-${{ env.RELEASE_VERSION }}
+          mv ./windows-latest ./windows-${{ env.RELEASE_VERSION }}
+
       - name: Create Release
-        id: create_release
-        uses: actions/create-release@latest
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ env.RELEASE_VERSION }}
+          release_name: Release ${{ env.RELEASE_VERSION }}
           body: |
             ${{ steps.changelog.outputs.changelog }}
           draft: false
           prerelease: false
-
-      # check download files    
-      - run: ls
-
-      - name: Upload Release Asset - Linux
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./ubuntu-latest
-          asset_name: linux-${{ env.RELEASE_VERSION }}
-          asset_content_type: application/octet-stream
-      
-      - name: Upload Release Asset - MacOS
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./macos-latest
-          asset_name: macos-${{ env.RELEASE_VERSION }}
-          asset_content_type: application/octet-stream
-      
-      - name: Upload Release Asset - Windows
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./windows-latest
-          asset_name: windows-${{ env.RELEASE_VERSION }}
-          asset_content_type: application/octet-stream
+          files: |
+            ./linux-${{ env.RELEASE_VERSION }}
+            ./macos-${{ env.RELEASE_VERSION }}
+            ./windows-${{ env.RELEASE_VERSION }}
