@@ -12,7 +12,7 @@ require (
 	github.com/fullstorydev/grpcurl v1.8.2
 	github.com/gin-contrib/logger v0.2.0
 	github.com/gin-gonic/contrib v0.0.0-20201101042839-6a891bf89f19
-	github.com/gin-gonic/gin v1.7.4
+	github.com/gin-gonic/gin v1.7.7
 	github.com/go-gormigrate/gormigrate/v2 v2.0.0
 	github.com/go-redis/redis/v8 v8.4.4
 	github.com/golang/mock v1.6.0
