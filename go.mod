@@ -12,7 +12,7 @@ require (
 	github.com/fullstorydev/grpcurl v1.8.2
 	github.com/gin-contrib/logger v0.2.0
 	github.com/gin-gonic/contrib v0.0.0-20201101042839-6a891bf89f19
-	github.com/gin-gonic/gin v1.7.4
+	github.com/gin-gonic/gin v1.9.0
 	github.com/go-gormigrate/gormigrate/v2 v2.0.0
 	github.com/go-redis/redis/v8 v8.4.4
 	github.com/golang/mock v1.6.0
@@ -33,7 +33,7 @@ require (
 	github.com/uber/jaeger-client-go v2.25.0+incompatible
 	github.com/uber/jaeger-lib v2.4.0+incompatible
 	github.com/vektah/gqlparser/v2 v2.4.0
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
+	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4
 	google.golang.org/api v0.54.0
 	google.golang.org/grpc v1.39.1
 	gorm.io/driver/mysql v1.0.3
